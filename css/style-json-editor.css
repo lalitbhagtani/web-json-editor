@@ -1,0 +1,639 @@
+.add-date,
+.json-add-date,
+.json-delete-image {
+    background: #2f2f2f;
+    padding: 5px
+}
+
+.toolbox-array,
+.toolbox-object {
+    -webkit-transition: opacity .5s ease-in-out;
+    -moz-transition: opacity .5s ease-in-out;
+    -o-transition: opacity .5s ease-in-out
+}
+
+a:active,
+a:hover,
+a:link,
+a:visited,
+ul.topnav li a {
+    text-decoration: none
+}
+
+.add-date,
+.json-add-date {
+    float: left;
+    position: relative;
+    font-family: verdana;
+    font-size: 11px;
+    color: #B4B4B4;
+    margin: 10px 0 0 5px;
+    border: 1px solid #B4B4B4
+}
+
+.delete-image,
+.json-delete-image {
+    float: left;
+    position: relative;
+    color: #B4B4B4;
+    margin: 8px 0 0 5px;
+    cursor: pointer
+}
+
+.delete-image {
+    padding: 5px
+}
+
+.array-div-value .tool-tip-text,
+.json-array-div-value .tool-tip-text {
+    width: 120px;
+    background: #4f4f4f;
+    color: #eee;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    text-align: center
+}
+
+.json-array-div-value .tool-tip-text {
+    visibility: hidden;
+    margin: 0 0 0 185px
+}
+
+.json-array-div-value:hover .tool-tip-text {
+    visibility: visible
+}
+
+.array-div-value .tool-tip-text {
+    visibility: hidden;
+    margin: 0 0 0 260px
+}
+
+.property-name,
+.property-type,
+.property-value {
+    font-size: 12px;
+    color: #B4B4B4;
+    font-family: verdana
+}
+
+.array-div-value:hover .tool-tip-text {
+    visibility: visible
+}
+
+.overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, .6);
+    z-index: 100;
+    visibility: hidden;
+    overflow-y: auto
+}
+
+.array-toolbox-overlay,
+.element-toolbox-overlay,
+.object-toolbox-overlay {
+    position: relative;
+    width: 400px;
+    top: calc(50% - 150px);
+    left: calc(50% - 200px);
+    background-color: #212121;
+    z-index: 120;
+    border: 2px solid #1F1F1F
+}
+
+.element-toolbox-overlay,
+.object-toolbox-overlay {
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px
+}
+
+.array-toolbox-overlay {
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    margin-bottom: 20px
+}
+
+.array-box,
+.element-box {
+    width: 80%;
+    height: 80%;
+    top: 4%;
+    left: 10%;
+    z-index: 120;
+    margin-top: 25px;
+    margin-bottom: 10px;
+    position: relative
+}
+
+.array-box {
+    overflow-y: visible
+}
+
+.json-object-view,
+.large-json-object {
+    overflow: auto;
+    background-color: #2f2f2f
+}
+
+.property-div {
+    margin: 20px
+}
+
+.property-name {
+    margin: 0 10px 0 0
+}
+
+.property-value {
+    margin: 0 12px 0 0
+}
+
+.property-type {
+    margin: 0 17px 0 0
+}
+
+.button-set {
+    padding: 3px 16px;
+    position: relative;
+    left: 38%
+}
+
+.mandatory-text-overlay {
+    visibility: visible;
+    opacity: 1;
+    color: red;
+    font-family: verdana;
+    font-size: 10px;
+    margin: 5px 0 0 10px;
+    display: none
+}
+
+.overlay-title-bar {
+    margin: 15px 10px 0 25px
+}
+
+.overlay-title {
+    font-family: verdana;
+    font-size: 20px;
+    color: #B4B4B4
+}
+
+.close-overlay {
+    position: relative;
+    float: right;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    margin: 3px 0 0
+}
+
+.circle-indent,
+.collapse-indent {
+    float: left;
+    margin: 7px 0 0
+}
+
+.large-json-overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, .6);
+    z-index: 200;
+    visibility: hidden
+}
+
+.large-json-text-view {
+    position: fixed;
+    width: 90%;
+    height: 90%;
+    top: 5%;
+    left: 5%;
+    background-color: #212121;
+    z-index: 210;
+    border: 2px solid #1F1F1F;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px
+}
+
+.large-json-object,
+.large-json-text {
+    position: relative;
+    width: 97%;
+    height: 85%;
+    top: 4%;
+    left: 1%;
+    z-index: 210;
+    display: block
+}
+
+.large-json-text {
+    border: 2px solid #AEAFAE;
+    background-color: #2f2f2f;
+    color: #B4B4B4;
+    font-family: verdana;
+    font-size: 14px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    resize: none
+}
+
+.large-json-object {
+    border: 2px solid #AEAFAE;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px
+}
+
+.collapse-indent {
+    cursor: pointer;
+    visibility: hidden
+}
+
+.tree-table {
+    margin-left: 12px;
+    float: left
+}
+
+.json-array,
+.json-element,
+.json-object {
+    position: relative;
+    background: #2f2f2f;
+    padding: 3px 8px;
+    margin: 2px;
+    color: #B4B4B4;
+    font-size: 12px;
+    display: block;
+    float: left;
+    font-family: verdana;
+    cursor: pointer
+}
+
+.json-object {
+    border: 2px solid #B4B4B4
+}
+
+.json-array {
+    border: 2px dashed #B4B4B4
+}
+
+.json-element {
+    border: 2px dotted #B4B4B4
+}
+
+.json-object-view {
+    width: 98%;
+    height: 90%;
+    border: 0 solid #AEAFAE;
+    color: #B4B4B4;
+    font-family: verdana;
+    font-size: 12px;
+    display: block
+}
+
+.container-toolbox,
+.tab-json-object {
+    border: 2px solid #AEAFAE;
+    position: relative
+}
+
+.tab-json-object {
+    float: left;
+    visibility: visible;
+    left: 1.5%;
+    width: 39%;
+    height: calc(99% - 145px)
+}
+
+.title-json-object {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: 7%;
+    background-color: #B4B4B4;
+    display: block
+}
+
+.container-advertisement-top,
+.container-body,
+.container-main,
+.json-text {
+    background-color: #2f2f2f
+}
+
+.title-json-object-text {
+    float: left;
+    font-family: verdana;
+    font-size: 16px;
+    font-weight: 700;
+    color: #2f2f2f;
+    padding: 7px;
+    margin-left: 5px
+}
+
+.json-property-name,
+.json-property-value {
+    font-size: 12px;
+    color: #B4B4B4;
+    font-family: verdana
+}
+
+.title-json-object-image-div {
+    float: right;
+    margin: 2px 5px 0
+}
+
+.title-json-object-image {
+    float: right;
+    margin: 0 0 0 5px;
+    visibility: visible;
+    cursor: pointer
+}
+
+.json-property-div {
+    margin: 15px 0 0 5px
+}
+
+.json-property-name {
+    margin: 5px 4px 5px 5px
+}
+
+.json-property-value {
+    margin: 5px 6px 5px 5px
+}
+
+.mandatory-text {
+    visibility: visible;
+    opacity: 1;
+    color: red;
+    font-family: verdana;
+    font-size: 10px;
+    margin: 5px 5px 0 10px;
+    display: none
+}
+
+.json-property-type {
+    font-family: verdana;
+    font-size: 12px;
+    color: #B4B4B4;
+    margin: 5px 11px 5px 5px
+}
+
+.json-button-set {
+    padding: 3px 16px;
+    position: relative;
+    left: 38%
+}
+
+.json-array-box {
+    height: 260px;
+    overflow-y: auto
+}
+
+.json-array-date {
+    margin: 15px 10px 0 5px
+}
+
+.container-body {
+    width: 100vw;
+    height: 100vh;
+    margin: 0
+}
+
+.container-advertisement-right {
+    position: relative;
+    float: right;
+    width: 300px;
+    height: 100%;
+    display: none;
+    background-color: #2f2f2f
+}
+
+.container-advertisement-top {
+    position: relative;
+    width: 100%;
+    height: 130px;
+    margin-bottom: 10px
+}
+
+.container-main {
+    position: relative;
+    width: auto;
+    overflow: hidden;
+    height: 100%
+}
+
+.container-toolbox {
+    float: left;
+    width: 18%;
+    left: .5%;
+    height: calc(99% - 145px)
+}
+
+.toolbox-array,
+.toolbox-element,
+.toolbox-object {
+    background: #2f2f2f;
+    color: #B4B4B4;
+    border: 2px solid #B4B4B4;
+    z-index: 1;
+    cursor: pointer;
+    font-family: verdana;
+    padding: 8px;
+    font-size: 12px
+}
+
+.toolbox-object {
+    margin: 8px 5px 5px;
+    transition: opacity .5s ease-in-out
+}
+
+.toolbox-array {
+    margin: 5px 5px 8px;
+    transition: opacity .5s ease-in-out
+}
+
+.toolbox-element {
+    margin: 5px;
+    -webkit-transition: opacity .5s ease-in-out;
+    -moz-transition: opacity .5s ease-in-out;
+    -o-transition: opacity .5s ease-in-out;
+    transition: opacity .5s ease-in-out
+}
+
+.title-elementbox,
+.title-toolbox {
+    font-family: verdana;
+    font-size: 16px;
+    font-weight: 700;
+    color: #2f2f2f;
+    background-color: #B4B4B4;
+    padding: 8px;
+    height: 17px
+}
+
+.tab-json-text {
+    float: left;
+    visibility: visible;
+    border: 2px solid #AEAFAE;
+    position: relative;
+    left: 2.5%;
+    width: 39%;
+    height: calc(99% - 145px)
+}
+
+.title-json-text {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: 7%;
+    background-color: #B4B4B4;
+    display: block
+}
+
+.json-text {
+    width: 98%;
+    height: 90%;
+    border: 0 solid #AEAFAE;
+    color: #B4B4B4;
+    font-family: verdana;
+    font-size: 12px;
+    resize: none
+}
+
+.help-overlay,
+.loading-overlay {
+    width: 100%;
+    height: 100%;
+    visibility: hidden
+}
+
+.header,
+.header-copy {
+    position: absolute;
+    color: #CDCDCD;
+    font-weight: bolder;
+    cursor: pointer
+}
+
+.header,
+.header-copy,
+.help-text,
+.new-span {
+    font-family: verdana
+}
+
+.header {
+    top: 20px;
+    left: 15px;
+    font-size: 54px
+}
+
+.header-copy {
+    top: 80px;
+    left: 220px;
+    font-size: 12px
+}
+
+.new-span {
+    margin: 5px 3px 0 5px;
+    float: left;
+    position: relative;
+    font-weight: bolder;
+    font-size: 16px;
+    color: #2f2f2f;
+    cursor: pointer
+}
+
+.adv,
+ul.topnav li {
+    float: right
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, .6);
+    z-index: 300
+}
+
+.loading-image-overlay {
+    position: relative;
+    top: calc(50% - 50px);
+    left: calc(50% - 50px);
+    z-index: 320
+}
+
+ul.topnav {
+    list-style-type: none;
+    margin: 2px;
+    padding: 0;
+    overflow: hidden
+}
+
+ul.topnav li a {
+    display: inline-block;
+    color: #CDCDCD;
+    text-align: center;
+    padding: 5px 15px;
+    transition: .3s;
+    font-size: 18px;
+    margin-top: 2px;
+    cursor: pointer
+}
+
+ul.topnav li a:hover {
+    background-color: #555
+}
+
+ul.topnav li.icon {
+    display: none
+}
+
+.help-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, .6);
+    z-index: 400;
+    overflow: auto
+}
+
+.help-overlay-outer-div {
+    position: relative;
+    width: 95%;
+    height: auto;
+    margin: 25px;
+    background-color: #212121;
+    z-index: 410;
+    border: 2px solid #1F1F1F;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px
+}
+
+.help-text {
+    position: relative;
+    margin: 20px;
+    color: #ccc;
+    font-size: 14px;
+    z-index: 410;
+    overflow: auto
+}
+
+p {
+    margin: 10px
+}
