@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en-US" prefix="og: http://ogp.me/ns#">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>JSON Online Editor, JSON Viewer - create, edit, format Json Online</title>
+    <link rel="stylesheet" href="files/css/style-json-editor.css">    
+</head>
+<body class="container-body" onload='load()'>
+<div id="container-advertisement-right" class="container-advertisement-right">
+</div>
+<div id='help-overlay' class='help-overlay'>
+	<div id='help-overlay-outer-div' class='help-overlay-outer-div'>
+		<div class="overlay-title-bar">
+			<span class="overlay-title">Help</span> <img
+				src='files/images/delete.png' class="close-overlay" title='close'
+				alt="Close" onclick="closeHelpOverlay('help-overlay','help-overlay-outer-div')" />
+		</div>
+		<div class="help-text">  
+			<p>JSON (JavaScript Object Notation) is an open source, language independent, human readable, lightweight data-interchange format.
+			It is most commonly used for asynchronous communication between browser and server through ajax and when an application need to
+			communicate with a remote computer or server through Restful API. This data format is very similar to JavaScript object,
+			It comprise of three different type of structures, first is a name/value pairs which can be called as a property or element,
+			second is a ordered list of values which is called an array and finally, third is a structure which can contain element
+			 or array or both in it and it is called an object. It is a main structure which can contain other object as well.
+			 To validate these documents, you can use <a href="http://json-schema.org/" target="_blank" title='JSON-Schema' >JSON-Schema</a>.
+			<h3>Json Online Editor / Json Viewer :-</h3>
+			<p>Json online editor is a web-based tool, designed to create, edit, view, format, and save json online.
+			This tool has multiple features which will help you to create them easily. A list of all its features and
+			functionality are as follows :-</p>
+			<h4>Drag &amp; Drop :-</h4>
+			<p>You can create a them from scratch by using drag and drop feature. To use drag &amp; drop feature, drag a node and drop it on any node,
+			dragged one will be added to the drop one, if it passes the below mentioned rules :-</p>
+			<ol>
+				<li>Elements can only come inside an object.</li>
+				<li>Array can only come inside an object.</li>
+				<li>Object can come inside an object or an array.</li>
+			</ol>
+			<p>Once the drag node is added to the drop one, json online editor / json viewer tool will open a popup based on the dragged node type,
+			element popup for element type, array popup for array type and so on, fill all the mandatory fields in the popup and click
+			<strong>Set</strong> button to finish.<p>
+			<h4>Tree View :-</h4>
+			<p>This view will show your work in a tree structure, you can also expand this, by clicking expand image button on the right hand side
+			of tree view bar.</p>
+			<h4>Text View :-</h4>
+			<p>This view is like a code editor, it will show your work in the text format, you can also expand this, by clicking
+			expand image button on the right hand side of the text bar.</p>
+			<h4>Download :-</h4>
+			<p>You can download your existing work, which you have created using json online editor / json viewer tool. To use this functionality,
+			 click download button on the top bar, this will download a file onto your disk.</p>
+			<h4>Load :-</h4>
+			<p>You can load any of your work into the tool by using load feature. To use this, first copy and paste your existing work
+			 into the text view and click load image button on the text bar.</p>
+			<h4>New :-</h4>
+			<p>This functionality will enable you to remove your existing work from the json online editor / json viewer tool,
+			So that you can start from the scratch.</p>
+			<h4>Copy &amp; Paste :-</h4>
+			<p>You can copy and paste any node into another based on three rules mentioned above in <strong>Drag &amp; Drop</strong> section.
+			To use Copy &amp; Paste functionality, first select a node which you like to copy, then click the copy and paste icon on tree bar and finally
+			select the node inside which you like to copy your previous selection. This will copy your previously selected one inside new one.
+			This Copy &amp; Paste functionality is very useful, when you want add a new property, which is similar to one of the existing property.</p>
+			<h4>Delete :-</h4>
+			<p>You can delete any node from json online editor / json viewer. To use this delete functionality, first select the node which you like to delete,
+			then click the delete icon on the right side of the bar, once you click the delete icon an confirm dialog will be displayed,
+			asking your confirmation for delete. Confirm dialog will contain two buttons <strong>Ok</strong> and <strong>Cancel</strong>,
+			click <strong>OK</strong> to delete or click <strong>Cancel</strong> to leave it.</p>
+			<h4>Save Online :-</h4>
+			<p>You can save and share your work by using this functionality. To use this functionality, click the save online button on the top bar.
+			This will save your work on the server and will give you a url with unique id, url can be used to view and edit your saved work and to share
+			your work with your colleagues.</p>
+		</div>
+	</div>	
+</div>
+<div id="container-main" class="container-main">
+    <div id="container-advertisement-top" class="container-advertisement-top">
+	    <ul class="topnav" id="myTopnav">
+		  <li><a onclick="openHelpOverlay('help-overlay','help-overlay-outer-div')">Help</a></li>
+		  <li><a onclick='saveToCloud()'>Save Online</a></li>
+		  <li><a onclick='saveToDisk()'>Download</a></li>
+		  <li><a onclick='newJson()'>New</a></li>		  
+		</ul>
+		<div class='adv'>
+		</div>
+        <div>
+            <h1 class="header">Json Editor</h1>
+		</div>
+    </div>
+    <div id="container-toolbox" class="container-toolbox">
+        <div id="title-toolbox" class="title-toolbox">Tags</div>
+        <div id="toolbox" >
+            <div id="Json-Object" class="toolbox-object" draggable="true"
+                 ondragstart="dragObjectStart(event)" ondragEnd="dragEnded(event)">Json Object</div>
+            <div id="Json-Element" class="toolbox-element" draggable="true"
+                 ondragstart="dragElementStart(event)" ondragEnd="dragEnded(event)">Json Element</div>
+            <div id="Json-Array" class="toolbox-array" draggable="true"
+                 ondragstart="dragArrayStart(event)" ondragEnd="dragEnded(event)">Json Array</div>
+        </div>
+        <div id="title-elementbox" class="title-elementbox">Property</div>
+        <div id="property-box" ></div>
+    </div>
+    <div id="container-json-object" class="tab-json-object">
+        <div class="title-json-object">
+            <div class="title-json-object-text">Tree View</div>
+            <div class="title-json-object-image-div">
+                <img class="title-json-object-image" src="files/images/expand_all.png" 
+                		alt='Expand' title='Expand Object View'
+                     onclick="expandJsonObjectView('json-object-view-table','large-json-object','large-json-overlay')" />
+                <img id="delete-json-element" class="title-json-object-image" title='Delete' 
+                		alt='Delete' src="files/images/dustbin.png" onclick="deleteJsonView()"/> 
+                <img id="copy-json-element" class="title-json-object-image" alt='Copy/Paste' title='Copy/Paste'
+                	src="files/images/copy.png" onclick="copy()" /> 
+            </div>
+        </div>
+        <div id="json-object-view" class="json-object-view">
+            <table id="json-object-view-table">
+                <tbody>
+                <tr>
+                    <td>
+                        <img id='rootObjectId-div-img' alt='Online Json Editor' title='collapse' src="files/images/collapse.png" class="collapse-indent"
+                             onclick="objectCollapseImageOnClick('rootObjectId-div-table','rootObjectId-div-img','rootObjectId-div')" />
+                        <div id="rootObjectId-div" class="json-object"
+                             ondragenter="dragEnter(event)"
+                             ondragleave="dragLeave(event)"
+                             ondrop="drop(event)"
+                             ondragover="dragOver(event)"
+                             onclick="objectTreeDivOnClick('rootObjectId-div')">Root</div>
+                        <br/>
+                        <table id="rootObjectId-div-table" class="tree-table"><tbody></tbody></table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="container-json-text" class="tab-json-text">
+        <div class="title-json-text">
+            <div class="title-json-object-text">Text View</div>
+            <div class="title-json-object-image-div">
+                <img class="title-json-object-image" src="files/images/expand_all.png" alt="Expand" title='Expand Text View'
+                     onclick="expandJsonTextView('json-text','large-json-text','large-json-overlay')" />
+                <img class="title-json-object-image" src="files/images/load.png" alt="Load" title='Load'
+                     onclick="loadJson()" />
+            </div>
+        </div>
+        <textarea id="json-text" class="json-text"></textarea>
+    </div>
+</div>
+<!-- Overlay Start -->
+<div id='overlay' class='overlay' ></div>
+<div id='large-json-overlay' class='large-json-overlay' ></div>
+<div id='loading-overlay' class='loading-overlay' >
+	<img id='loading' class="loading-image-overlay" src="files/images/loading.gif" alt="Loading"
+		 title='Loading' />
+</div>
+<!-- Overlay End -->
+
+</body>
+<script type="text/javascript" src="files/js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="files/js/moment.min.js"></script>
+<script src="files/js/js-json-editor.js" type="text/javascript"></script>
+
+</html>
