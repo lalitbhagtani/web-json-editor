@@ -1,5 +1,5 @@
 # Json Editor / Json Viewer :-
-Json online editor is a web-based tool, designed to create, edit, view, format, and save json online. This tool has multiple features which will help you to create them easily. A list of all its features and functionality are as follows :-
+Json online editor is a web-based tool, designed to create, edit, view, format, and save json online. This tool has multiple features which will help you to create them easily. Code from master branch is hosted [here](http://codedestine.com/json-editor.html). A list of all its features and functionality are as follows :-
 
 **Drag & Drop**
 You can create a them from scratch by using drag and drop feature. To use drag & drop feature, drag a node and drop it on any node, dragged one will be added to the drop one, if it passes the below mentioned rules :-
