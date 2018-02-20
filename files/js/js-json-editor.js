@@ -1,136 +1,2203 @@
-var $jscomp={scope:{},checkStringArgs:function(a,b,c){if(null==a)throw new TypeError("The 'this' value for String.prototype."+c+" must not be null or undefined");if(b instanceof RegExp)throw new TypeError("First argument to String.prototype."+c+" must not be a regular expression");return a+""}};
-$jscomp.defineProperty="function"==typeof Object.defineProperties?Object.defineProperty:function(a,b,c){if(c.get||c.set)throw new TypeError("ES3 does not support getters and setters.");a!=Array.prototype&&a!=Object.prototype&&(a[b]=c.value)};$jscomp.getGlobal=function(a){return"undefined"!=typeof window&&window===a?a:"undefined"!=typeof global&&null!=global?global:a};$jscomp.global=$jscomp.getGlobal(this);
-$jscomp.polyfill=function(a,b,c,d){if(b){c=$jscomp.global;a=a.split(".");for(d=0;d<a.length-1;d++){var e=a[d];e in c||(c[e]={});c=c[e]}a=a[a.length-1];d=c[a];b=b(d);b!=d&&null!=b&&$jscomp.defineProperty(c,a,{configurable:!0,writable:!0,value:b})}};$jscomp.polyfill("String.prototype.includes",function(a){return a?a:function(a,c){return-1!==$jscomp.checkStringArgs(this,a,"includes").indexOf(a,c||0)}},"es6-impl","es3");
-var isCopyMode=!1,copyObjectViewId=null,counter=0,objectDragElementType="jsonElement",objectDragArrayType="jsonArray",objectDragObjectType="jsonObject",objectDragType="type",displayInline="inline",displayBlock="block",displayNone="none",displayVisible="visible",displayHidden="hidden",valueNull="null",overlayDivId="overlay",overlayElementBoxId="element-toolbox-overlay",elementBoxId="json-element-box",overlayArrayBoxId="array-toolbox-overlay",arrayBoxId="json-array-box",overlayObjectBoxId="object-toolbox-overlay",
-objectBoxId="json-object-box",attachedJsonObjectKey="attachedJsonObjectKey",dropTargetDivKey="dropTargetDivKey",objectViewSelectId=null,objectViewSelectId_2=null,rootObjectViewId="rootObjectId-div",rootObject="rootObject",rootObjectTableId="rootObjectId-div-table",rootObjectImageId="rootObjectId-div-img",jsonTextViewId="json-text",autoType="auto",stringType="string",numberType="number",booleanType="boolean",dateType="date",nullType="null",objectsType="objects",ElementInElementMessage="An element can not come inside another element",
-ElementInArrayMessage="An element can not come inside another array",ObjectInElementMessage="An object can not come inside another element",ArrayInElementMessage="An array can not come inside another element",ArrayInArrayMessage="An array can not come inside another array",ArrayInNonObjectsMessage="This is not an Object array",noneSelectedMessage="Please select node to delete",rootSelectedMessage="Root object can not be deleted",deleteConfirmMessage="Are you sure, you want to delete this node. Once deleted can'nt be undone",
-noneSelectedCopyMessage="Please select a node to copy",noneSelectedPasteMessage="Please select node to paste",copiedMessage="Copied",CloudConnectionProblemMessage="There is some problem in connecting to cloud server, Please try again after some time",jsonSavedMessage="Saved",overlayElementName="element-name",overlayElementValue="element-value",overlayElementRadioTrue="element-radio-true",overlayElementRadioFalse="element-radio-false",overlayElementType="element-type",overlayElementRadioDiv="element-radio-div",
-overlayElementMandatoryName="element-name-mandatory-overlay",overlayElementMandatoryValue="element-value-mandatory-overlay",overlayArrayName="array-name",overlayArrayValue="array-value",overlayDateDiv="date-div",overlayArrayDateValue="array-date-value",overlayArrayType="array-type",overlayArrayDateDiv="array-date-div",overlayArrayMandatoryName="array-name-mandatory-overlay",overlayArrayMandatoryValue="array-value-mandatory-overlay",overlayArrayCheckValue="array-value-check-overlay",overlayObjectName=
-"object-name",overlayObjectMandatoryName="object-name-mandatory-overlay",toolboxElementName="json-element-name",toolboxElementValue="json-element-value",toolboxElementRadioTrue="json-element-radio-true",toolboxElementRadioFalse="json-element-radio-false",toolboxElementRadioDiv="json-element-radio-div",toolboxElementType="json-element-type",toolboxElementMandatoryName="element-name-mandatory-text",toolboxElementMandatoryValue="element-value-mandatory-text",toolboxArrayName="json-array-name",toolboxArrayValue=
-"json-array-value",toolboxDateDiv="json-date-div",toolboxArrayDateValue="json-array-date-value",toolboxArrayType="json-array-type",toolboxArrayDateDiv="json-array-date-div",toolboxArrayMandatoryName="array-name-mandatory-text",toolboxArrayMandatoryValue="array-value-mandatory-text",toolboxArrayCheckValue="array-value-check-text",toolboxObjectName="json-object-name",toolboxObjectMandatoryName="object-name-mandatory-text",objectViewDivSelectBackground="#555555",objectViewDivBackground="#2f2f2f",objectTreeViewClassName=
-"json-object",arrayTreeViewClassName="json-array",elementTreeViewClassName="json-element",deleteImagePath="jsonEditorFiles/images/delete.png",collapseImagePath="jsonEditorFiles/images/collapse.png",expandImagePath="jsonEditorFiles/images/expand.png",circleImagePath="jsonEditorFiles/images/circle.png",copyImagePath="jsonEditorFiles/images/copy.png",copySelectImagePath="jsonEditorFiles/images/copy-select.png",collapseImagePathClassName="collapse-indent",circleImagePathClassName="circle-indent",treeTableClassName=
-"tree-table",cssClassAddDateOverlay="add-date",cssClassDeleteImageOverlay="delete-image",cssClassAddDate="json-add-date",cssClassDeleteImage="json-delete-image",selectDateMessage="Select Date",allNumberMessage="All values should be number",allBooleanMessage="All values should be boolean",allNullMessage="All values should be null",jsonArrayDateValue=[],imageAlt="Online Json Editor",propertyBox="property-box",rootJsonObject=new JsonObject(rootObject,rootObjectTableId,rootObjectImageId);
-"codedestine.com"!=location.host&&(location.href="../../json-editor.html");function JsonElement(a,b,c){this.type="jsonElement";this.name=a;this.value=b;this.valueType=c;this.divId=""}function JsonArray(a,b){this.type="jsonArray";this.name=a;this.value=[];this.valueType=b;this.divId=this.parent=this.imageId=this.tableId=""}function JsonObject(a,b,c){this.type="jsonObject";this.name=a;this.value=[];this.tableId=b;this.imageId=c;this.divId=""}function isFloat(a){return 0!==a%1}
-function isInteger(a){return 0===a%1}function setFormattedJsonText(){var a={};null!=rootJsonObject&&(a=getJsonObject(rootJsonObject));document.getElementById(jsonTextViewId).value=JSON.stringify(a,null,"\t")}
-function getJsonObject(a){var b,c={};if(null!==a.value)for(var d=0;d<a.value.length;d++)if(b=a.value[d],null!==b)if("jsonElement"===b.type)c[b.name]=b.value;else if("jsonArray"===b.type){var e=[],f;for(f in b.value)"[object Object]"===Object.prototype.toString.call(b.value[f])?e.push(getJsonObject(b.value[f])):e.push(b.value[f]);c[b.name]=e}else"jsonObject"===b.type&&(c[b.name]=getJsonObject(b));return c}jQuery.data(document.getElementById(rootObjectViewId),attachedJsonObjectKey,rootJsonObject);
-function setAndShowPropertyBox(a){var b=jQuery.data(a,attachedJsonObjectKey);b.type===objectDragElementType?(showPropertyBox(propertyBox,objectDragElementType),jQuery.data(document.getElementById(elementBoxId),dropTargetDivKey,a),setElementBoxInitialValues(b,toolboxElementName,toolboxElementType,toolboxElementValue,toolboxElementRadioTrue,toolboxElementRadioFalse,toolboxElementRadioDiv,toolboxElementMandatoryName,toolboxElementMandatoryValue)):b.type===objectDragArrayType?(showPropertyBox(propertyBox,
-objectDragArrayType),jQuery.data(document.getElementById(arrayBoxId),dropTargetDivKey,a),setArrayBoxInitialValues(b,toolboxArrayName,toolboxArrayValue,toolboxArrayDateDiv,toolboxDateDiv,toolboxArrayDateValue,toolboxArrayType,toolboxArrayMandatoryName,toolboxArrayMandatoryValue,toolboxArrayCheckValue,cssClassAddDate,cssClassDeleteImage)):b.type===objectDragObjectType&&b.parent===objectDragObjectType&&(showPropertyBox(propertyBox,objectDragObjectType),jQuery.data(document.getElementById(objectBoxId),
-dropTargetDivKey,a),setObjectBoxInitialValues(b,toolboxObjectName,toolboxObjectMandatoryName))}
-function drop(a){a.preventDefault();var b=a.currentTarget,c=a.dataTransfer.getData(objectDragType);a=jQuery.data(b,attachedJsonObjectKey);null!=a&&(allowDrop(c,a)?(objectViewSelectId_2=objectViewSelectId,objectViewSelectId=b.id,c===objectDragElementType?(openOverlay(overlayDivId,objectDragElementType),jQuery.data(document.getElementById(overlayElementBoxId),dropTargetDivKey,b),setElementBoxInitialValues(new JsonElement("","",autoType),overlayElementName,overlayElementType,overlayElementValue,overlayElementRadioTrue,
-overlayElementRadioFalse,overlayElementRadioDiv,overlayElementMandatoryName,overlayElementMandatoryValue)):c===objectDragArrayType?(openOverlay(overlayDivId,objectDragArrayType),jQuery.data(document.getElementById(overlayArrayBoxId),dropTargetDivKey,b),setArrayBoxInitialValues(new JsonArray("",autoType),overlayArrayName,overlayArrayValue,overlayArrayDateDiv,overlayDateDiv,overlayArrayDateValue,overlayArrayType,overlayArrayMandatoryName,overlayArrayMandatoryValue,overlayArrayCheckValue,cssClassAddDateOverlay,
-cssClassDeleteImageOverlay)):c===objectDragObjectType&&(c===a.type?(openOverlay(overlayDivId,objectDragObjectType),jQuery.data(document.getElementById(overlayObjectBoxId),dropTargetDivKey,b),setObjectBoxInitialValues(new JsonObject("","",""),overlayObjectName,overlayObjectMandatoryName)):(c=new JsonObject("","",""),a=jQuery.data(b,attachedJsonObjectKey),c.name=a.value.length,c.parent=objectDragArrayType,a.value.push(c),b=createObjectDiv(c),document.getElementById(a.tableId).appendChild(b.element),
-document.getElementById(a.tableId).appendChild(b.table),document.getElementById(a.imageId).style.visibility=displayVisible,objectTreeDivOnClick(b.id),setFormattedJsonText()))):(b.style.background=objectViewDivBackground,null!=objectViewSelectId&&(document.getElementById(objectViewSelectId).style.background=objectViewDivSelectBackground)))}
-function allowDrop(a,b){var c=b.type;if(a===objectDragElementType){if(c===objectDragObjectType)return!0;if(c===objectDragElementType)return alert(ElementInElementMessage),!1;if(c===objectDragArrayType)return alert(ElementInArrayMessage),!1}else if(a===objectDragObjectType){if(c===objectDragObjectType)return!0;if(c===objectDragElementType)return alert(ObjectInElementMessage),!1;if(c===objectDragArrayType){if(b.valueType===objectsType)return!0;alert(ArrayInNonObjectsMessage);return!1}}else if(a===objectDragArrayType){if(c===
-objectDragObjectType)return!0;if(c===objectDragElementType)return alert(ArrayInElementMessage),!1;if(c===objectDragArrayType)return alert(ArrayInArrayMessage),!1}}function getFormattedTreeDivId(a){counter+=1;return 5<=a.length?a.substring(0,5)+"-"+counter:a+"-"+counter}function getFormattedTreeDivName(a){return 15<a.length?a.substring(0,15)+"...":a}
-function createElementDiv(a){var b=getFormattedTreeDivId(a.name)+"-div";a.divId=b;var c=getMandatoryText(b,elementTreeViewClassName,getFormattedTreeDivName(a.name));jQuery.data(c,attachedJsonObjectKey,a);c.addEventListener("dragenter",function(a){dragEnter(a)});c.addEventListener("dragleave",function(a){dragLeave(a)});c.addEventListener("drop",function(a){drop(a)});c.addEventListener("dragover",function(a){dragOver(a)});c.addEventListener("click",function(){objectTreeDivOnClick(b)});a=document.createElement("tr");
-$(a).attr("id",b+"-tr");var d=document.createElement("td");d.appendChild(getImage(b+"-img",circleImagePath,circleImagePathClassName));d.appendChild(c);a.appendChild(d);return{element:a,id:b}}
-function createObjectDiv(a){var b=getFormattedTreeDivId(a.name)+"-div";a.divId=b;var c=getImage(b+"-img",collapseImagePath,collapseImagePathClassName);c.addEventListener("click",function(){objectCollapseImageOnClick(b+"-table",b+"-img",b)});var d=getMandatoryText(b,"",getFormattedTreeDivName(a.name));jQuery.data(d,attachedJsonObjectKey,a);a.type===objectDragArrayType?$(d).addClass(arrayTreeViewClassName):$(d).addClass(objectTreeViewClassName);d.addEventListener("dragenter",function(a){dragEnter(a)});
-d.addEventListener("dragleave",function(a){dragLeave(a)});d.addEventListener("drop",function(a){drop(a)});d.addEventListener("dragover",function(a){dragOver(a)});d.addEventListener("click",function(){objectTreeDivOnClick(b)});var e=document.createElement("table");$(e).attr("id",b+"-table");$(e).addClass(treeTableClassName);a.tableId=b+"-table";a.imageId=b+"-img";a=document.createElement("tr");$(a).attr("id",b+"-tr");var f=document.createElement("tr");$(f).attr("id",b+"-table-tr");var k=document.createElement("td");
-k.appendChild(c);k.appendChild(d);a.appendChild(k);c=document.createElement("td");c.appendChild(e);f.appendChild(c);return{element:a,id:b,table:f}}function objectCollapseImageOnClick(a,b,c){a=document.getElementById(a);b=document.getElementById(b);b.src.includes(collapseImagePath)?(a.style.display=displayNone,b.src=expandImagePath):b.src.includes(expandImagePath)&&(a.style.display=displayBlock,b.src=collapseImagePath);objectTreeDivOnClick(c)}
-function deleteJsonView(){if(null==objectViewSelectId)alert(noneSelectedMessage);else if(objectViewSelectId==rootObjectViewId)alert(rootSelectedMessage);else if(confirm(deleteConfirmMessage)){unCopy();var a=jQuery.data(document.getElementById(objectViewSelectId),attachedJsonObjectKey),b=document.getElementById(objectViewSelectId+"-tr"),c=document.getElementById(objectViewSelectId+"-table-tr"),d=b.parentNode;d.removeChild(b);null!==c&&d.removeChild(c);b=d.id.replace("-table","");c=jQuery.data(document.getElementById(b),
-attachedJsonObjectKey);null!=c&&null!=c.value&&(d=c.value.indexOf(a),-1!=d&&c.value.splice(d,1));0==c.value.length&&(document.getElementById(b+"-img").style.visibility="hidden");if(a.type===objectDragObjectType&&a.parent===objectDragArrayType)for(var e in c.value)a=c.value[e],a.name=e,d=document.getElementById(a.divId),$(d).html(getFormattedTreeDivName(a.name));setFormattedJsonText();objectTreeDivOnClick(b)}}
-function dragObjectStart(a){dragStart();a.dataTransfer.setData(objectDragType,objectDragObjectType)}function dragElementStart(a){dragStart();a.dataTransfer.setData(objectDragType,objectDragElementType)}function dragArrayStart(a){dragStart();a.dataTransfer.setData(objectDragType,objectDragArrayType)}function dragStart(){null!=objectViewSelectId&&(document.getElementById(objectViewSelectId).style.background=objectViewDivBackground)}
-function dragEnter(a){a=a.currentTarget;null!=a&&(a.style.background=objectViewDivSelectBackground)}function dragEnded(a){null!=objectViewSelectId&&(document.getElementById(objectViewSelectId).style.background=objectViewDivSelectBackground)}function dragLeave(a){a=a.currentTarget;null!=a&&(a.style.background=objectViewDivBackground)}function dragOver(a){a.preventDefault()}
-function showPropertyBox(a,b){var c=document.getElementById(a);b===objectDragElementType?c.appendChild(elementDiv()):b===objectDragObjectType?c.appendChild(objectDiv()):b===objectDragArrayType&&c.appendChild(arrayDiv())}function hidePropertyBox(a){for(a=document.getElementById(a);a.firstChild;)a.removeChild(a.firstChild)}
-function openOverlay(a,b){var c=document.getElementById(a);c.style.visibility=displayVisible;b===objectDragElementType?c.appendChild(elementDivOverlay()):b===objectDragObjectType?c.appendChild(objectDivOverlay()):b===objectDragArrayType&&c.appendChild(arrayDivOverlay())}
-var closeOverLayVar=function(a,b){var c=document.getElementById(a);for(c.style.visibility=displayHidden;c.firstChild;)c.removeChild(c.firstChild);b&&(null!=objectViewSelectId&&(c=document.getElementById(objectViewSelectId),c.style.background=objectViewDivBackground),null!=objectViewSelectId_2&&(c=document.getElementById(objectViewSelectId_2),c.style.background=objectViewDivSelectBackground),objectViewSelectId=objectViewSelectId_2)};
-function setJsonElementValue(a,b,c,d,e,f,k,g){var h=new JsonElement("","",""),m=!0;b=document.getElementById(b);void 0===b.value||""===b.value?(m=!1,document.getElementById(k).style.display=displayBlock):h.name=b.value;f=document.getElementById(f);f=f.options[f.selectedIndex].value;h.valueType=f;if(f===booleanType)c=document.getElementById(d),e=document.getElementById(e),!0===c.checked?h.value=!0:!0===e.checked?h.value=!1:(m=!1,document.getElementById(g).style.display=displayBlock);else{var l=document.getElementById(c);
-if(f===stringType||f===autoType)void 0===l.value&&(m=!1,document.getElementById(g).style.display=displayBlock);else if(void 0===l.value||""===l.value)m=!1,document.getElementById(g).style.display=displayBlock}m&&(f===stringType?h.value=l.value:f===numberType?h.value=l.valueAsNumber:f===dateType?h.value=l.valueAsDate:f===nullType?"null"===l.value.toLowerCase()&&(h.value=null):f===autoType&&("null"===l.value.toLowerCase()?h.value=null:"true"===l.value.toLowerCase()?h.value=!0:"false"===l.value.toLowerCase()?
-h.value=!1:""===l.value.toLowerCase()?h.value="":isNaN(l.value)?h.value=l.value:isFloat(l.value)?h.value=parseFloat(l.value):isInteger(l.value)?h.value=parseInt(l.value):h.value=l.value),a===overlayElementBoxId?(a=jQuery.data(document.getElementById(a),dropTargetDivKey),a=jQuery.data(a,attachedJsonObjectKey),a.value.push(h),h=createElementDiv(h),document.getElementById(a.tableId).appendChild(h.element),document.getElementById(a.imageId).style.visibility=displayVisible,closeOverLayVar(overlayDivId,
-!1),objectTreeDivOnClick(h.id)):a===elementBoxId&&(g=jQuery.data(document.getElementById(a),dropTargetDivKey),a=jQuery.data(g,attachedJsonObjectKey),a.name=h.name,a.value=h.value,a.valueType=h.valueType,$(g).html(getFormattedTreeDivName(a.name))),setFormattedJsonText())}
-function setElementBoxInitialValues(a,b,c,d,e,f,k,g,h){var m=a.value,l=a.name;a=a.valueType;document.getElementById(g).style.display=displayNone;document.getElementById(h).style.display=displayNone;document.getElementById(b).value=l;document.getElementById(c).value=a;b=document.getElementById(d);e=document.getElementById(e);f=document.getElementById(f);k=document.getElementById(k);b.value="";e.checked="";f.checked="";a===stringType||a===autoType?(b.type="text",b.value=null===m?"null":m,b.readOnly=
-!1,k.style.display=displayNone):a===numberType&&(b.type="number",b.value=m,b.readOnly=!1,k.style.display=displayNone);a===booleanType&&(b.value="",b.readOnly=!1,b.type="hidden",k.style.display=displayInline,!0===m?e.checked="checked":f.checked="checked");a===nullType&&(b.type="text",b.value="null",b.readOnly=!0,k.style.display=displayNone);a===dateType&&(b.type="date",b.valueAsDate=m,b.readOnly=!1,k.style.display=displayNone)}
-function elementDivOverlay(){var a=getDivWithIdAndClass("element-toolbox-overlay","element-toolbox-overlay"),b=createOverlayTitleBar("Json Element",closeOverLayVar,"overlay"),c=getDivWithIdAndClass("element-box","element-box");c.appendChild(elementNameOverlay());c.appendChild(elementValueOverlay());c.appendChild(elementTypeOverlay());c.appendChild(elementButtonOverlay());a.appendChild(b);a.appendChild(c);return a}
-function elementValueOverlay(){var a=getPropertyDiv("property-div"),b=getPropertyDivText("property-value","Value :- "),c=getPropertyDivInput("element-value","text","width:70%");c.addEventListener("blur",function(){checkElementValueOnblur("element-value","element-value-mandatory-overlay","element-type")});c.addEventListener("focus",function(){checkElementOnFocus("element-value-mandatory-overlay")});var d=getPropertyBooleanBox("element-radio-div","element-radio-true","element-radio-false","property-name",
-"element-value-mandatory-overlay"),e=getMandatoryText("element-value-mandatory-overlay","mandatory-text-overlay","* Value is a Mandatory Field");a.appendChild(b);a.appendChild(c);a.appendChild(d);a.appendChild(document.createElement("br"));a.appendChild(e);return a}function elementDiv(){var a=document.createElement("div");$(a).attr("id","json-element-box");a.appendChild(elementName());a.appendChild(elementValue());a.appendChild(elementType());a.appendChild(elementButton());return a}
-function elementValue(){var a=getPropertyDiv("json-property-div"),b=getPropertyDivText("json-property-value","Value :- "),c=getPropertyDivInput("json-element-value","text","width:60%");c.addEventListener("blur",function(){checkElementValueOnblur("json-element-value","element-value-mandatory-text","json-element-type")});c.addEventListener("focus",function(){checkElementOnFocus("element-value-mandatory-text")});var d=getPropertyBooleanBox("json-element-radio-div","json-element-radio-true","json-element-radio-false",
-"json-property-name","element-value-mandatory-text"),e=getMandatoryText("element-value-mandatory-text","mandatory-text","* Value is a Mandatory Field");a.appendChild(b);a.appendChild(c);a.appendChild(d);a.appendChild(e);return a}
-function elementButtonOverlay(){var a=getPropertyDiv("property-div"),b=getPropertyDivButton("element-set","button","button-set","Set");b.addEventListener("click",function(){setJsonElementValue("element-toolbox-overlay","element-name","element-value","element-radio-true","element-radio-false","element-type","element-name-mandatory-overlay","element-value-mandatory-overlay")});a.appendChild(b);return a}
-function elementButton(){var a=getPropertyDiv("json-property-div"),b=getPropertyDivButton("json-element-set","button","json-button-set","Set");b.addEventListener("click",function(){setJsonElementValue("json-element-box","json-element-name","json-element-value","json-element-radio-true","json-element-radio-false","json-element-type","element-name-mandatory-text","element-value-mandatory-text")});a.appendChild(b);return a}
-function elementTypeOverlay(){var a=getPropertyDiv("property-div"),b=getPropertyDivText("property-type","Type :- "),c=getPropertyDivSelect("element-type");c.addEventListener("change",function(){changeJsonElementValueTypeBox("element-value","element-type","element-radio-true","element-radio-false","element-radio-div")});a.appendChild(b);a.appendChild(c);return a}
-function elementType(){var a=getPropertyDiv("json-property-div"),b=getPropertyDivText("json-property-type","Type :- "),c=getPropertyDivSelect("json-element-type");c.addEventListener("change",function(){changeJsonElementValueTypeBox("json-element-value","json-element-type","json-element-radio-true","json-element-radio-false","json-element-radio-div")});a.appendChild(b);a.appendChild(c);return a}
-function elementNameOverlay(){var a=getPropertyDiv("property-div"),b=getPropertyDivText("property-name","Name :- "),c=getPropertyDivInput("element-name","text","width:70%");c.addEventListener("blur",function(){checkElementOnblur("element-name","element-name-mandatory-overlay")});c.addEventListener("focus",function(){checkElementOnFocus("element-name-mandatory-overlay")});var d=getMandatoryText("element-name-mandatory-overlay","mandatory-text-overlay","* Name is a Mandatory Field");a.appendChild(b);
-a.appendChild(c);a.appendChild(document.createElement("br"));a.appendChild(d);return a}
-function elementName(){var a=getPropertyDiv("json-property-div"),b=getPropertyDivText("json-property-name","Name :- "),c=getPropertyDivInput("json-element-name","text","width:60%");c.addEventListener("blur",function(){checkElementOnblur("json-element-name","element-name-mandatory-text")});c.addEventListener("focus",function(){checkElementOnFocus("element-name-mandatory-text")});var d=getMandatoryText("element-name-mandatory-text","mandatory-text","* Name is a Mandatory Field");a.appendChild(b);a.appendChild(c);
-a.appendChild(d);return a}function checkElementOnblur(a,b){var c=document.getElementById(a).value;if(void 0===c||""===c)document.getElementById(b).style.display=displayBlock}function checkElementOnFocus(a){document.getElementById(a).style.display=displayNone}
-function checkElementValueOnblur(a,b,c){c=document.getElementById(c);c=c.options[c.selectedIndex].value;a=document.getElementById(a).value;if(c===stringType||c===autoType)void 0===a&&(document.getElementById(b).style.display=displayBlock);else if(void 0===a||""===a)document.getElementById(b).style.display=displayBlock}function setElementBooleanValue(a){document.getElementById(a).style.display=displayNone}
-function changeJsonElementValueTypeBox(a,b,c,d,e){a=document.getElementById(a);c=document.getElementById(c);d=document.getElementById(d);e=document.getElementById(e);b=document.getElementById(b);b=b.options[b.selectedIndex].value;b===stringType||b===autoType?(a.type="text",a.value="",a.readOnly=!1,e.style.display=displayNone,a.focus()):b===numberType&&(a.type="number",a.value="",a.readOnly=!1,e.style.display=displayNone,a.focus());b===booleanType&&(a.value="",a.readOnly=!1,a.type="hidden",e.style.display=
-displayInline,c.checked="",d.checked="",c.focus());b===nullType&&(a.type="text",a.value="null",a.readOnly=!0,e.style.display=displayNone,a.focus());b===dateType&&(a.type="date",a.value="",a.readOnly=!1,e.style.display=displayNone,a.focus())}
-function setArrayBoxInitialValues(a,b,c,d,e,f,k,g,h,m,l,p){var n=a.value,q=a.name;a=a.valueType;document.getElementById(g).style.display=displayNone;document.getElementById(h).style.display=displayNone;document.getElementById(m).style.display=displayNone;document.getElementById(b).value=q;document.getElementById(k).value=a;b=document.getElementById(c);d=document.getElementById(d);k=document.getElementById(f);f=document.getElementById(e);k.value="";f.innerHTML="";jsonArrayDateValue=[];d.style.display=
-displayNone;b.value=n;b.readOnly=!1;b.disabled=!1;if(a==dateType){b.value="";b.readOnly=!0;for(a=0;a<n.length;a++)jsonArrayDateValue.push(n[a]),b=addDateDiv(c,n[a],jsonArrayDateValue.length-1,e,l,p),f.appendChild(b);setDateValueToInput(c,jsonArrayDateValue);d.style.display=displayBlock}else if(a==nullType){c="";for(a=0;a<n.length;a++)c=c+","+valueNull;","===c.charAt(0)&&(c=c.substring(1));b.value=c}else if(a==autoType){c="";for(a=0;a<n.length;a++)c=null===n[a]?c+","+valueNull:c+","+n[a];","===c.charAt(0)&&
-(c=c.substring(1));b.value=c}else a==objectsType&&(b.value="",b.disabled=!0)}
-function setJsonArrayValue(a,b,c,d,e,f,k){document.getElementById(k).style.display=displayNone;var g=new JsonArray("",""),h=!0,m=!1;b=document.getElementById(b);void 0===b.value||""===b.value?(h=!1,document.getElementById(e).style.display=displayBlock):g.name=b.value;e=document.getElementById(d);e=e.options[e.selectedIndex].value;g.valueType=e;b=document.getElementById(c);if(e===stringType||e===autoType||e===objectsType)void 0===b.value&&(h=!1,document.getElementById(f).style.display=displayBlock);
-else if(void 0===b.value||""===b.value)h=!1,document.getElementById(f).style.display=displayBlock;if(h&&(m=checkArrayValue(c,d,f,k)))for(c=b.value.split(","),d=0;d<c.length;d++)if(null!=c[d])switch(e){case numberType:isNaN(c[d])||(isFloat(c[d])?g.value.push(parseFloat(c[d])):g.value.push(parseInt(c[d])));break;case booleanType:"true"===c[d].toLowerCase()?g.value.push(!0):"false"===c[d].toLowerCase()&&g.value.push(!1);break;case nullType:"null"===c[d].toLowerCase()&&g.value.push(null);break;case dateType:for(d in jsonArrayDateValue)null!==
-jsonArrayDateValue[d]&&g.value.push(jsonArrayDateValue[d]);break;case autoType:"null"===c[d].toLowerCase()?g.value.push(null):"true"===c[d].toLowerCase()?g.value.push(!0):"false"===c[d].toLowerCase()?g.value.push(!1):""===c[d].toLowerCase()?g.value.push(""):isNaN(c[d])?g.value.push(c[d]):isFloat(c[d])?g.value.push(parseFloat(c[d])):isInteger(c[d])?g.value.push(parseInt(c[d])):g.value.push(c[d]);break;case objectsType:break;default:g.value.push(c[d])}if(h&&m){if(a===overlayArrayBoxId)a=jQuery.data(document.getElementById(a),
-dropTargetDivKey),a=jQuery.data(a,attachedJsonObjectKey),a.value.push(g),g=createObjectDiv(g),document.getElementById(a.tableId).appendChild(g.element),document.getElementById(a.tableId).appendChild(g.table),document.getElementById(a.imageId).style.visibility=displayVisible,closeOverLayVar(overlayDivId,overlayArrayBoxId,!1),objectTreeDivOnClick(g.id);else if(a===arrayBoxId){h=jQuery.data(document.getElementById(a),dropTargetDivKey);a=jQuery.data(h,attachedJsonObjectKey);if(a.valueType===objectsType&&
-void 0!==a.tableId&&""!==a.tableId){for(m=document.getElementById(a.tableId);m.firstChild;)m.removeChild(m.firstChild);void 0!==a.imageId&&""!==a.imageId&&(document.getElementById(a.imageId).style.visibility=displayHidden)}a.name=g.name;a.value=g.value;a.valueType=g.valueType;$(h).html(getFormattedTreeDivName(a.name))}setFormattedJsonText()}}
-function addDate(a,b,c,d,e,f,k){document.getElementById(d).style.display=displayNone;a=document.getElementById(a);b=document.getElementById(b);void 0===a.value||""===a.value?(b.innerHTML=selectDateMessage,b.style.display=displayBlock):(b.innerHTML="",b.style.display=displayNone,jsonArrayDateValue.push(a.valueAsDate),setDateValueToInput(c,jsonArrayDateValue),b=document.getElementById(e),c=addDateDiv(c,a.valueAsDate,jsonArrayDateValue.length-1,e,f,k),b.appendChild(c),a.value="")}
-function setDateValueToInput(a,b){for(var c=document.getElementById(a),d=c.value="",e=0;e<b.length;e++)null!=b[e]&&(d=d+","+b[e].toLocaleDateString());","===d.charAt(0)&&(d=d.substring(1));c.value=d}
-function addDateDiv(a,b,c,d,e,f){var k="date-"+c,g=document.createElement("div");g.id=k;var h=document.createElement("span");h.className=e;h.innerHTML=b.toLocaleDateString();b=document.createElement("img");b.src=deleteImagePath;b.className=f;b.addEventListener("click",function(){deleteDate(a,k,c,d)});g.appendChild(h);g.appendChild(b);return g}
-function deleteDate(a,b,c,d){d=document.getElementById(d);b=document.getElementById(b);d.removeChild(b);jsonArrayDateValue[c]=null;setDateValueToInput(a,jsonArrayDateValue)}
-function closeArrayOverlay(a,b,c){document.getElementById(a).style.visibility=displayHidden;document.getElementById(b).style.display=displayNone;document.getElementById(overlayArrayMandatoryName).style.display=displayNone;document.getElementById(overlayArrayMandatoryValue).style.display=displayNone;document.getElementById(overlayArrayCheckValue).style.display=displayNone;c&&(null!=objectViewSelectId&&(a=document.getElementById(objectViewSelectId),a.style.background=objectViewDivBackground),null!=
-objectViewSelectId_2&&(a=document.getElementById(objectViewSelectId_2),a.style.background=objectViewDivSelectBackground),objectViewSelectId=objectViewSelectId_2)}function checkArrayValueOnFocus(a,b){var c=document.getElementById(b);c.options[c.selectedIndex].value!==dateType&&(document.getElementById(a).style.display=displayNone)}
-function checkArrayValue(a,b,c,d){var e=!0;b=document.getElementById(b);b=b.options[b.selectedIndex].value;a=document.getElementById(a).value;if(b===stringType||b===autoType||b===objectsType)void 0===a&&(document.getElementById(c).style.display=displayBlock,document.getElementById(d).style.display=displayNone,e=!1);else if(void 0===a||""===a)document.getElementById(c).style.display=displayBlock,document.getElementById(d).style.display=displayNone,e=!1;if(e){a=a.trim();e=a.split(",");a=!1;c="";if(b===
-numberType)for(var f=0;f<e.length;f++){if(b=e[f].trim(),isNaN(b)){a=!0;c=allNumberMessage;break}}else if(b===booleanType)for(f=0;f<e.length;f++){if(b=e[f].trim(),"true"!=b.toLowerCase()&&"false"!=b.toLowerCase()){a=!0;c=allBooleanMessage;break}}else if(b===nullType)for(f=0;f<e.length;f++)if(b=e[f].trim(),"null"!=b.toLowerCase()){a=!0;c=allNullMessage;break}if(a&&0<e.length)return d=document.getElementById(d),d.innerHTML=c,d.style.display=displayBlock,!1;document.getElementById(d).style.display=displayNone;
-return!0}return!1}
-function changeJsonArrayValueType(a,b,c,d,e,f,k){a=document.getElementById(a);b=document.getElementById(b);c=document.getElementById(c);b=b.options[b.selectedIndex].value;document.getElementById(d).style.display=displayNone;a.readOnly=!1;a.disabled=!1;b==dateType?(a.value="",a.readOnly=!0,c.style.display=displayBlock,checkElementOnFocus(e)):b==objectsType?(a.value="",a.disabled=!0,c.style.display=displayNone,document.getElementById(f).value="",document.getElementById(k).innerHTML="",jsonArrayDateValue=
-[],checkElementOnFocus(e)):(a.value="",c.style.display=displayNone,document.getElementById(f).value="",document.getElementById(k).innerHTML="",jsonArrayDateValue=[],a.focus())}
-function arrayDivOverlay(){var a=getDivWithIdAndClass("array-toolbox-overlay","array-toolbox-overlay"),b=createOverlayTitleBar("Json Array",closeOverLayVar,"overlay"),c=getDivWithIdAndClass("array-box","array-box");c.appendChild(arrayNameOverlay());c.appendChild(arrayValueOverlay());c.appendChild(arrayTypeOverlay());c.appendChild(arrayButtonOverlay());a.appendChild(b);a.appendChild(c);return a}
-function arrayDiv(){var a=getDivWithIdAndClass("json-array-box","json-array-box");a.appendChild(arrayName());a.appendChild(arrayValue());a.appendChild(arrayType());a.appendChild(arrayButton());return a}
-function arrayNameOverlay(){var a=getPropertyDiv("property-div"),b=getPropertyDivText("property-name","Name :- "),c=getPropertyDivInput("array-name","text","width:70%");c.addEventListener("blur",function(){checkElementOnblur("array-name","array-name-mandatory-overlay")});c.addEventListener("focus",function(){checkElementOnFocus("array-name-mandatory-overlay")});var d=getMandatoryText("array-name-mandatory-overlay","mandatory-text-overlay","* Name is a Mandatory Field");a.appendChild(b);a.appendChild(c);
-a.appendChild(document.createElement("br"));a.appendChild(d);return a}
-function arrayName(){var a=getPropertyDiv("json-property-div"),b=getPropertyDivText("json-property-name","Name :- "),c=getPropertyDivInput("json-array-name","text","width:60%");c.addEventListener("blur",function(){checkElementOnblur("json-array-name","array-name-mandatory-text")});c.addEventListener("focus",function(){checkElementOnFocus("array-name-mandatory-text")});var d=getMandatoryText("array-name-mandatory-text","mandatory-text","* Name is a Mandatory Field");a.appendChild(b);a.appendChild(c);
-a.appendChild(d);return a}
-function arrayValueOverlay(){var a=getPropertyDiv("property-div"),b=getPropertyDiv("array-div-value"),c=getPropertyDivText("property-value","Value :- "),d=getPropertyDivInput("array-value","text","width:70%");d.addEventListener("blur",function(){checkArrayValue("array-value","array-type","array-value-mandatory-overlay","array-value-check-overlay")});d.addEventListener("focus",function(){checkArrayValueOnFocus("array-value-mandatory-overlay","array-type")});var e=document.createElement("div");$(e).addClass("tool-tip-text");
-$(e).html("Enter Comma Separated Values without quotes");b.appendChild(c);b.appendChild(d);b.appendChild(e);a.appendChild(b);a.appendChild(getDateDiv("array-date-div","date-div","width:70%","array-date-value","array-date-value-add","array-date-value","array-value-check-overlay","array-value-mandatory-overlay","array-value","add-date","delete-image"));a.appendChild(getMandatoryText("array-value-check-overlay","mandatory-text-overlay",""));a.appendChild(getMandatoryText("array-value-mandatory-overlay",
-"mandatory-text-overlay","* Value is a Mandatory Field"));return a}
-function arrayValue(){var a=getPropertyDiv("json-property-div"),b=getPropertyDiv("json-array-div-value"),c=getPropertyDivText("json-property-value","Value :- "),d=getPropertyDivInput("json-array-value","text","width:60%");d.addEventListener("blur",function(){checkArrayValue("json-array-value","json-array-type","array-value-mandatory-text","array-value-check-text")});d.addEventListener("focus",function(){checkArrayValueOnFocus("array-value-mandatory-text","json-array-type")});var e=document.createElement("div");
-$(e).addClass("tool-tip-text");$(e).html("Enter Comma Separated Values without quotes");b.appendChild(c);b.appendChild(d);b.appendChild(e);a.appendChild(b);a.appendChild(getDateDiv("json-array-date-div","json-date-div","width:60%","json-array-date-value","json-array-date-value-add","json-array-date-value","array-value-check-text","array-value-mandatory-text","json-array-value","json-add-date","json-delete-image"));a.appendChild(getMandatoryText("array-value-mandatory-text","mandatory-text","* Value is a Mandatory Field"));
-a.appendChild(getMandatoryText("array-value-check-text","mandatory-text",""));return a}
-function arrayTypeOverlay(){var a=getPropertyDiv("property-div"),b=getPropertyDivText("property-type","Type :- "),c=getPropertyDivSelect("array-type");$(c).append($("<option></option>").attr("value","objects").text("Objects"));c.addEventListener("change",function(){changeJsonArrayValueType("array-value","array-type","array-date-div","array-value-check-overlay","array-value-mandatory-overlay","array-date-value","date-div")});a.appendChild(b);a.appendChild(c);return a}
-function arrayType(){var a=getPropertyDiv("json-property-div"),b=getPropertyDivText("json-property-type","Type :- "),c=getPropertyDivSelect("json-array-type");$(c).append($("<option></option>").attr("value","objects").text("Objects"));c.addEventListener("change",function(){changeJsonArrayValueType("json-array-value","json-array-type","json-array-date-div","array-value-check-text","array-value-mandatory-text","json-array-date-value","json-date-div")});a.appendChild(b);a.appendChild(c);return a}
-function arrayButtonOverlay(){var a=getPropertyDiv("property-div"),b=getPropertyDivButton("array-set","button","button-set","Set");b.addEventListener("click",function(){setJsonArrayValue("array-toolbox-overlay","array-name","array-value","array-type","array-name-mandatory-overlay","array-value-mandatory-overlay","array-value-check-overlay")});a.appendChild(b);return a}
-function arrayButton(){var a=getPropertyDiv("json-property-div"),b=getPropertyDivButton("json-array-set","button","json-button-set","Set");b.addEventListener("click",function(){setJsonArrayValue("json-array-box","json-array-name","json-array-value","json-array-type","array-name-mandatory-text","array-value-mandatory-text","array-value-check-text")});a.appendChild(b);return a}
-function setJsonObjectValue(a,b,c){var d=new JsonObject("","",""),e=!0;b=document.getElementById(b);void 0===b.value||""===b.value?(e=!1,document.getElementById(c).style.display=displayBlock):d.name=b.value;e&&(a===overlayObjectBoxId?(a=jQuery.data(document.getElementById(a),dropTargetDivKey),a=jQuery.data(a,attachedJsonObjectKey),d.parent=objectDragObjectType,a.value.push(d),d=createObjectDiv(d),document.getElementById(a.tableId).appendChild(d.element),document.getElementById(a.tableId).appendChild(d.table),
-document.getElementById(a.imageId).style.visibility=displayVisible,closeOverLayVar(overlayDivId,!1),objectTreeDivOnClick(d.id)):a===objectBoxId&&(c=jQuery.data(document.getElementById(a),dropTargetDivKey),a=jQuery.data(c,attachedJsonObjectKey),a.name=d.name,$(c).html(getFormattedTreeDivName(a.name))),setFormattedJsonText())}function setObjectBoxInitialValues(a,b,c){a=a.name;document.getElementById(c).style.display=displayNone;document.getElementById(b).value=a}
-function objectDivOverlay(){var a=getDivWithIdAndClass("object-toolbox-overlay","object-toolbox-overlay"),b=createOverlayTitleBar("Json Object",closeOverLayVar,"overlay"),c=getDivWithIdAndClass("object-box","element-box");c.appendChild(objectNameOverlay());c.appendChild(objectButtonOverlay());a.appendChild(b);a.appendChild(c);return a}function objectDiv(){var a=getDivWithId("json-object-box");a.appendChild(objectName());a.appendChild(objectButton());return a}
-function objectNameOverlay(){var a=getPropertyDiv("property-div"),b=getPropertyDivText("property-name","Name :- "),c=getPropertyDivInput("object-name","text","width:70%");c.addEventListener("blur",function(){checkElementOnblur("object-name","object-name-mandatory-overlay")});c.addEventListener("focus",function(){checkElementOnFocus("object-name-mandatory-overlay")});var d=getMandatoryText("object-name-mandatory-overlay","mandatory-text-overlay","* Name is a Mandatory Field");a.appendChild(b);a.appendChild(c);
-a.appendChild(d);return a}
-function objectName(){var a=getPropertyDiv("json-property-div"),b=getPropertyDivText("json-property-name","Name :- "),c=getPropertyDivInput("json-object-name","text","width:60%");c.addEventListener("blur",function(){checkElementOnblur("json-object-name","object-name-mandatory-text")});c.addEventListener("focus",function(){checkElementOnFocus("object-name-mandatory-text")});var d=getMandatoryText("object-name-mandatory-text","mandatory-text","* Name is a Mandatory Field");a.appendChild(b);a.appendChild(c);
-a.appendChild(d);return a}function objectButtonOverlay(){var a=getPropertyDiv("property-div"),b=getPropertyDivButton("object-set","button","button-set","Set");b.addEventListener("click",function(){setJsonObjectValue("object-toolbox-overlay","object-name","object-name-mandatory-overlay")});a.appendChild(b);return a}
-function objectButton(){var a=getPropertyDiv("json-property-div"),b=getPropertyDivButton("json-object-set","button","json-button-set","Set");b.addEventListener("click",function(){setJsonObjectValue("json-object-box","json-object-name","object-name-mandatory-text")});a.appendChild(b);return a}
-function loadStartingJson(){var a={};a[stringType]="Hello";a[numberType]=1;a[booleanType]=!1;a[dateType]=new Date;a.array=["a","b","c","d"];a.object={};a.object.objectString="Hello";a.object.objectNumber=1;a.object.objectBoolean=!1;document.getElementById(jsonTextViewId).value=JSON.stringify(a,null,"\t");for(var a=JSON.parse(document.getElementById(jsonTextViewId).value),b=document.getElementById(rootObjectTableId);b.firstChild;)b.removeChild(b.firstChild);parseToJsObject(a,rootJsonObject);objectTreeDivOnClick(rootObjectViewId)}
-function parseToJsObject(a,b){if(null!==a)for(var c in a)if("string"===typeof a[c])if(isDate(a[c])){var d=Date.parse(a[c]);parseJsonElement(b,c,new Date(d),"date")}else parseJsonElement(b,c,a[c],"string");else"number"===typeof a[c]?parseJsonElement(b,c,a[c],"number"):"boolean"===typeof a[c]?parseJsonElement(b,c,a[c],"boolean"):"object"===typeof a[c]&&(null===a[c]?parseJsonElement(b,c,a[c],"null"):"[object Array]"===Object.prototype.toString.call(a[c])?parseJsonArray(b,c,a[c]):"[object Object]"===
-Object.prototype.toString.call(a[c])&&parseJsonObject(b,c,a[c],objectDragObjectType))}function parseJsonObject(a,b,c,d){b=new JsonObject(b,"","");b.parent=d;a.value.push(b);d=createObjectDiv(b);document.getElementById(a.tableId).appendChild(d.element);document.getElementById(a.tableId).appendChild(d.table);document.getElementById(a.imageId).style.visibility=displayVisible;parseToJsObject(c,b)}
-function parseJsonArray(a,b,c){b=new JsonArray(b,"");b.valueType="auto";a.value.push(b);var d=createObjectDiv(b);document.getElementById(a.tableId).appendChild(d.element);document.getElementById(a.tableId).appendChild(d.table);document.getElementById(a.imageId).style.visibility=displayVisible;if(null!==c){var e=[],f;for(f in c)"object"===typeof c[f]?"[object Object]"===Object.prototype.toString.call(c[f])?(parseJsonObject(b,f,c[f],objectDragArrayType),b.valueType="objects"):null===f&&e.push(c[f]):
-e.push(c[f])}b.valueType!==objectsType&&(b.value=e)}function parseJsonElement(a,b,c,d){b=new JsonElement(b,c,d);a.value.push(b);b=createElementDiv(b);document.getElementById(a.tableId).appendChild(b.element);document.getElementById(a.imageId).style.visibility=displayVisible}function expandJsonObjectView(a,b,c){c=document.getElementById(c);c.appendChild(createLargeObjectViewOverlay());c.style.visibility=displayVisible;a=document.getElementById(a);document.getElementById(b).appendChild(a)}
-function expandJsonTextView(a,b,c){c=document.getElementById(c);c.appendChild(createLargeTextViewOverlay());c.style.visibility=displayVisible;document.getElementById(b).value=document.getElementById(a).value}var closeLargeTextOverlayVar=function(a){closeLargeOverlay(a)},closeLargeObjectOverlayVar=function(a){var b=document.getElementById("json-object-view-table");document.getElementById("json-object-view").appendChild(b);closeLargeOverlay(a)};
-function closeLargeOverlay(a){for(a=document.getElementById(a);a.firstChild;)a.removeChild(a.firstChild);a.style.visibility=displayHidden}
-function createLargeTextViewOverlay(){var a=getDivWithIdAndClass("large-json-text-view","large-json-text-view"),b=document.createElement("textarea");$(b).addClass("large-json-text");$(b).attr("id","large-json-text");$(b).attr("readonly","readonly");a.appendChild(createLargeOverlayTitleBar("Json Text View",closeLargeTextOverlayVar,"large-json-overlay"));a.appendChild(b);return a}
-function createLargeObjectViewOverlay(){var a=getDivWithIdAndClass("large-json-object-view","large-json-text-view"),b=getDivWithIdAndClass("large-json-object","large-json-object");a.appendChild(createLargeOverlayTitleBar("Json Object View",closeLargeObjectOverlayVar,"large-json-overlay"));a.appendChild(b);return a}
-function createOverlayTitleBar(a,b,c){var d=document.createElement("div");$(d).addClass("overlay-title-bar");var e=document.createElement("span");$(e).addClass("overlay-title");$(e).html(a);a=document.createElement("img");$(a).addClass("close-overlay");$(a).attr("alt",imageAlt);$(a).attr("src",deleteImagePath);a.addEventListener("click",function(){b(c,!0)});d.appendChild(e);d.appendChild(a);return d}
-function createLargeOverlayTitleBar(a,b,c){var d=document.createElement("div");$(d).addClass("overlay-title-bar");var e=document.createElement("span");$(e).addClass("overlay-title");$(e).html(a);a=document.createElement("img");$(a).addClass("close-overlay");$(a).attr("alt",imageAlt);$(a).attr("src",deleteImagePath);a.addEventListener("click",function(){b(c)});d.appendChild(e);d.appendChild(a);return d}function getDivWithId(a){var b=document.createElement("div");$(b).attr("id",a);return b}
-function getDivWithIdAndClass(a,b){var c=document.createElement("div");$(c).attr("id",a);$(c).addClass(b);return c}function getMandatoryText(a,b,c){var d=document.createElement("div");$(d).attr("id",a);$(d).addClass(b);$(d).html(c);return d}function getPropertyDivText(a,b){var c=document.createElement("span");$(c).addClass(a);$(c).html(b);return c}function getPropertyDiv(a){var b=document.createElement("div");$(b).addClass(a);return b}
-function getPropertyDivInput(a,b,c){var d=document.createElement("input");$(d).attr("id",a);$(d).attr("type",b);$(d).attr("style",c);return d}function getPropertyDivButton(a,b,c,d){var e=document.createElement("button");$(e).attr("id",a);$(e).attr("type",b);$(e).addClass(c);$(e).html(d);return e}function getImage(a,b,c){var d=document.createElement("img");$(d).addClass(c);$(d).attr("id",a);$(d).attr("src",b);return d}
-function getDateDiv(a,b,c,d,e,f,k,g,h,m,l){a=getDivWithId(a);$(a).attr("style","display:none");var p=getDivWithId(b);c=getPropertyDivInput(d,"date",c);$(c).addClass("json-array-date");d=document.createElement("button");$(d).attr("id",e);$(d).attr("type","button");$(d).attr("style","height: 24px");$(d).html("Add");d.addEventListener("click",function(){addDate(f,k,h,g,b,m,l)});a.appendChild(p);a.appendChild(c);a.appendChild(d);return a}
-function getPropertyDivSelect(a){var b=document.createElement("select");$(b).attr("id",a);$(b).append($("<option></option>").attr("value","auto").text("Auto"));$(b).append($("<option></option>").attr("value","string").text("String"));$(b).append($("<option></option>").attr("value","number").text("Number"));$(b).append($("<option></option>").attr("value","boolean").text("Boolean"));$(b).append($("<option></option>").attr("value","date").text("Date"));$(b).append($("<option></option>").attr("value",
-"null").text("Null"));return b}function getPropertyDivRadio(a,b){var c=document.createElement("input");$(c).attr("id",a);$(c).attr("type","radio");$(c).attr("name","radioValue");$(c).attr("value",b);return c}
-function getPropertyBooleanBox(a,b,c,d,e){var f=document.createElement("div");$(f).attr("id",a);$(f).attr("style","display:none");a=getPropertyDivRadio(b,"true");a.addEventListener("click",function(){setElementBooleanValue(e)});a.addEventListener("focus",function(){checkElementOnFocus(e)});b=getPropertyDivText(d,"True");c=getPropertyDivRadio(c,"false");c.addEventListener("click",function(){setElementBooleanValue(e)});d=getPropertyDivText(d,"False");f.appendChild(a);f.appendChild(b);f.appendChild(c);
-f.appendChild(d);return f}function newJson(){for(var a=document.getElementById(rootObjectTableId);a.firstChild;)a.removeChild(a.firstChild);document.getElementById(rootObjectViewId).style.background=objectViewDivBackground;objectViewSelectId=null;unCopy();rootJsonObject.value=[];setFormattedJsonText()}function copy(){null===objectViewSelectId?alert(noneSelectedCopyMessage):(document.getElementById("copy-json-element").src=copySelectImagePath,isCopyMode=!0,copyObjectViewId=objectViewSelectId)}
-function unCopy(){document.getElementById("copy-json-element").src=copyImagePath;isCopyMode=!1;copyObjectViewId=null}
-function objectTreeDivOnClick(a){if(null!=objectViewSelectId){var b=document.getElementById(objectViewSelectId);null!=b&&(b.style.background=objectViewDivBackground)}b=document.getElementById(a);b.style.background=objectViewDivSelectBackground;objectViewSelectId=a;if(isCopyMode){var c=paste();unCopy();c===objectViewSelectId?(hidePropertyBox(propertyBox),a!==rootObjectViewId&&setAndShowPropertyBox(b)):objectTreeDivOnClick(c)}else hidePropertyBox(propertyBox),a!==rootObjectViewId&&setAndShowPropertyBox(b)}
-function paste(){var a=objectViewSelectId,b=document.getElementById(copyObjectViewId),b=jQuery.data(b,attachedJsonObjectKey),c=document.getElementById(objectViewSelectId),c=jQuery.data(c,attachedJsonObjectKey);if(allowDrop(b.type,c)){for(var d=!1,e=0,f="";;){for(var k in c.value)if(c.value[k].name===b.name+f){d=!0;break}if(d)e+=1,f=" - "+e,d=!1;else break}k=cloneObject(c,b,f);null!==k&&(c.type===objectDragArrayType&&(k.name=c.value.length,$(document.getElementById(k.divId)).html(getFormattedTreeDivName(k.name))),
-c.value.push(k),setFormattedJsonText(),a=k.divId)}return a}
-function cloneObject(a,b,c){var d=null;if(b.type===objectDragElementType)d=new JsonElement(b.name+c,"",b.valueType),c=createElementDiv(d),document.getElementById(a.tableId).appendChild(c.element),document.getElementById(a.imageId).style.visibility=displayVisible,d.value=b.valueType===dateType?new Date(b.value.toUTCString()):b.value;else if(b.type===objectDragArrayType)if(d=new JsonArray(b.name+c,b.valueType),c=createObjectDiv(d),document.getElementById(a.tableId).appendChild(c.element),document.getElementById(a.tableId).appendChild(c.table),
-document.getElementById(a.imageId).style.visibility=displayVisible,b.valueType===dateType)for(var e in b.value)d.value.push(new Date(b.value[e].toUTCString()));else if(b.valueType===objectsType)for(e in b.value)d.value.push(cloneObject(d,b.value[e],""));else for(e in b.value)d.value.push(b.value[e]);else if(b.type===objectDragObjectType)for(e in d=new JsonObject(b.name+c),d.parent=a.type,c=createObjectDiv(d),document.getElementById(a.tableId).appendChild(c.element),document.getElementById(a.tableId).appendChild(c.table),
-document.getElementById(a.imageId).style.visibility=displayVisible,b.value)d.value.push(cloneObject(d,b.value[e],""));return d}function saveToDisk(){var a=document.createElement("a");a.setAttribute("href","data:application/json;charset=utf-8,"+encodeURIComponent(document.getElementById(jsonTextViewId).value));a.setAttribute("download","JsonFile.json");a.style.display="none";document.body.appendChild(a);a.click();document.body.removeChild(a)}
-function saveToCloud(){var a=document.getElementById(jsonTextViewId).value,b=getParameterByName("id",window.location.href);null!==b?(a={jsonText:a,id:b},a=JSON.stringify(a,null,""),document.getElementById("loading-overlay").style.visibility=displayVisible,$.ajax({url:"http://json-editor-backend.appspot.com/rest/json/",data:a,datatype:"application/json",contentType:"application/json",async:!0,type:"PUT",crossDomain:!0,success:function(a){document.getElementById("loading-overlay").style.visibility=
-displayHidden;null===a.id||"null"===a.id||isNaN(a.id)?alert(CloudConnectionProblemMessage):alert(jsonSavedMessage)},error:function(a){document.getElementById("loading-overlay").style.visibility=displayHidden;alert(CloudConnectionProblemMessage)}})):(a={jsonText:a},a=JSON.stringify(a,null,""),document.getElementById("loading-overlay").style.visibility=displayVisible,$.ajax({url:"http://json-editor-backend.appspot.com/rest/json/",data:a,datatype:"application/json",contentType:"application/json",async:!0,
-type:"POST",crossDomain:!0,success:function(a){document.getElementById("loading-overlay").style.visibility=displayHidden;null===a.id||"null"===a.id||isNaN(a.id)?alert(CloudConnectionProblemMessage):window.open("http://codedestine.com/json-editor.html?id="+a.id,"_self")},error:function(a){document.getElementById("loading-overlay").style.visibility=displayHidden;alert(CloudConnectionProblemMessage)}}))}
-function getParameterByName(a,b){b||(b=window.location.href);a=a.replace(/[\[\]]/g,"\\$&");var c=(new RegExp("[?&]"+a+"(=([^&#]*)|&|#|$)")).exec(b);return c?c[2]?decodeURIComponent(c[2].replace(/\+/g," ")):"":null}
-function load(){var a=getParameterByName("id",window.location.href);null!==a?(document.getElementById(jsonTextViewId),document.getElementById("loading-overlay").style.visibility=displayVisible,$.ajax({url:"http://json-editor-backend.appspot.com/rest/json/"+a,datatype:"application/json",async:!0,type:"GET",crossDomain:!0,success:function(a){document.getElementById("loading-overlay").style.visibility=displayHidden;document.getElementById(jsonTextViewId).value=a.jsonText;loadJsonToTool(a.jsonText)},
-error:function(){document.getElementById("loading-overlay").style.visibility=displayHidden;alert(CloudConnectionProblemMessage)}})):loadStartingJson()}function loadJson(){var a=document.getElementById(jsonTextViewId).value;loadJsonToTool(a)}
-function loadJsonToTool(a){a=JSON.parse(a);if(null!==a){for(var b=document.getElementById(rootObjectTableId);b.firstChild;)b.removeChild(b.firstChild);objectViewSelectId=null;unCopy();rootJsonObject.value=[];parseToJsObject(a,rootJsonObject);objectTreeDivOnClick(rootObjectViewId);setFormattedJsonText()}}function closeHelpOverlay(a,b){document.getElementById(a).style.visibility=displayHidden;document.getElementById(b).style.visibility=displayHidden}
-function openHelpOverlay(a,b){document.getElementById(a).style.visibility=displayVisible;document.getElementById(b).style.visibility=displayVisible}
-function isDate(a){return moment(a,"YYYY-MM-DD",!0).isValid()||moment(a,"YYYY-MM-DDThh:mm:ss",!0).isValid()||moment(a,"YYYY-MM-DDThh:mm:ssZ",!0).isValid()||moment(a,"YYYY-MM-DDThh:mm",!0).isValid()||moment(a,"YYYY-MM-DDThh:mmZ",!0).isValid()||moment(a,"YYYY-MM-DDThh:mm:ss.s",!0).isValid()||moment(a,"YYYY-MM-DDThh:mm:ss.sZ",!0).isValid()||moment(a,"YYYY-MM-DDThh:mm:ss.ss",!0).isValid()||moment(a,"YYYY-MM-DDThh:mm:ss.ssZ",!0).isValid()||moment(a,"YYYY-MM-DDThh:mm:ss.sss",!0).isValid()||moment(a,"YYYY-MM-DDThh:mm:ss.sssZ",
-!0).isValid()||moment(a,"YYYY-MM-DDThh:mm:ss.sss+hh:mm",!0).isValid()||moment(a,"YYYY-MM-DDThh:mm:ss.sss-hh:mm",!0).isValid()||moment(a,"YYYY-MM-DDThh:mm:ss.ss+hh:mm",!0).isValid()||moment(a,"YYYY-MM-DDThh:mm:ss.ss-hh:mm",!0).isValid()||moment(a,"YYYY-MM-DDThh:mm:ss.s+hh:mm",!0).isValid()||moment(a,"YYYY-MM-DDThh:mm:ss.s-hh:mm",!0).isValid()?!0:!1};
+var isCopyMode = false;
+var copyObjectViewId = null;
+var counter = 0;
+var objectDragElementType = 'jsonElement';
+var objectDragArrayType = 'jsonArray';
+var objectDragObjectType = 'jsonObject';
+var objectDragType = 'type';
+
+var displayInline = 'inline';
+var displayBlock = 'block';
+var displayNone = 'none';
+var displayVisible = 'visible';
+var displayHidden = 'hidden';
+
+var valueNull = 'null';
+
+var overlayDivId = 'overlay';
+var overlayElementBoxId = 'element-toolbox-overlay';
+var elementBoxId = 'json-element-box';
+var overlayArrayBoxId = 'array-toolbox-overlay';
+var arrayBoxId = 'json-array-box';
+var overlayObjectBoxId = 'object-toolbox-overlay';
+var objectBoxId = 'json-object-box';
+
+var attachedJsonObjectKey = 'attachedJsonObjectKey';
+var dropTargetDivKey = 'dropTargetDivKey';
+
+var objectViewSelectId = null;
+var objectViewSelectId_2 = null;
+var rootObjectViewId = 'rootObjectId-div';
+var rootObject = 'rootObject';
+var rootObjectTableId = 'rootObjectId-div-table';
+var rootObjectImageId = 'rootObjectId-div-img';
+
+var jsonTextViewId = 'json-text';
+
+var autoType = "auto";
+var stringType = "string";
+var numberType = "number";
+var booleanType = "boolean";
+var dateType = "date";
+var nullType = "null";
+var objectsType = "objects";
+
+var ElementInElementMessage = "An element can not come inside another element";
+var ElementInArrayMessage = "An element can not come inside another array";
+var ObjectInElementMessage = "An object can not come inside another element";
+var ArrayInElementMessage = "An array can not come inside another element";
+var ArrayInArrayMessage = "An array can not come inside another array";
+var ArrayInNonObjectsMessage = "This is not an Object array";
+
+var noneSelectedMessage = "Please select node to delete";
+var rootSelectedMessage = "Root object can not be deleted";
+var deleteConfirmMessage = "Are you sure, you want to delete this node. Once deleted can'nt be undone";
+var noneSelectedCopyMessage = "Please select a node to copy";
+var noneSelectedPasteMessage = "Please select node to paste";
+var copiedMessage = "Copied";
+var CloudConnectionProblemMessage = "There is some problem in connecting to cloud server, Please try again after some time";
+var jsonSavedMessage = "Saved";
+
+var overlayElementName = 'element-name';
+var overlayElementValue = 'element-value';
+var overlayElementRadioTrue = 'element-radio-true';
+var overlayElementRadioFalse = 'element-radio-false';
+var overlayElementType = 'element-type';
+var overlayElementRadioDiv = 'element-radio-div';
+var overlayElementMandatoryName = 'element-name-mandatory-overlay';
+var overlayElementMandatoryValue  = 'element-value-mandatory-overlay';
+
+var overlayArrayName = 'array-name';
+var overlayArrayValue = 'array-value';
+var overlayDateDiv = 'date-div';
+var overlayArrayDateValue = 'array-date-value';
+var overlayArrayType = 'array-type';
+var overlayArrayDateDiv = 'array-date-div';
+var overlayArrayMandatoryName = 'array-name-mandatory-overlay';
+var overlayArrayMandatoryValue  = 'array-value-mandatory-overlay';
+var overlayArrayCheckValue  = 'array-value-check-overlay';
+
+var overlayObjectName = 'object-name';
+var overlayObjectMandatoryName = 'object-name-mandatory-overlay';
+
+var toolboxElementName = 'json-element-name';
+var toolboxElementValue = 'json-element-value';
+var toolboxElementRadioTrue = 'json-element-radio-true';
+var toolboxElementRadioFalse = 'json-element-radio-false';
+var toolboxElementRadioDiv = 'json-element-radio-div';
+var toolboxElementType = 'json-element-type';
+var toolboxElementMandatoryName = 'element-name-mandatory-text';
+var toolboxElementMandatoryValue  = 'element-value-mandatory-text';
+
+var toolboxArrayName = 'json-array-name';
+var toolboxArrayValue = 'json-array-value';
+var toolboxDateDiv = 'json-date-div';
+var toolboxArrayDateValue = 'json-array-date-value';
+var toolboxArrayType = 'json-array-type';
+var toolboxArrayDateDiv = 'json-array-date-div';
+var toolboxArrayMandatoryName = 'array-name-mandatory-text';
+var toolboxArrayMandatoryValue  = 'array-value-mandatory-text';
+var toolboxArrayCheckValue  = 'array-value-check-text';
+
+var toolboxObjectName = 'json-object-name';
+var toolboxObjectMandatoryName = 'object-name-mandatory-text';
+
+var objectViewDivSelectBackground = '#555555';
+var objectViewDivBackground = '#2f2f2f';
+
+var objectTreeViewClassName = 'json-object';
+var arrayTreeViewClassName = 'json-array';
+var elementTreeViewClassName = 'json-element';
+
+var deleteImagePath = 'jsonEditorFiles/images/delete.png';
+var collapseImagePath = 'jsonEditorFiles/images/collapse.png';
+var expandImagePath = 'jsonEditorFiles/images/expand.png';
+var circleImagePath = 'jsonEditorFiles/images/circle.png';
+var copyImagePath = 'jsonEditorFiles/images/copy.png';
+var copySelectImagePath = 'jsonEditorFiles/images/copy-select.png';
+var collapseImagePathClassName = 'collapse-indent';
+var circleImagePathClassName = 'circle-indent';
+var treeTableClassName = 'tree-table';
+
+var cssClassAddDateOverlay = 'add-date';
+var cssClassDeleteImageOverlay = 'delete-image';
+var cssClassAddDate = 'json-add-date';
+var cssClassDeleteImage = 'json-delete-image';
+
+var selectDateMessage = 'Select Date';
+var allNumberMessage = 'All values should be number';
+var allBooleanMessage = 'All values should be boolean';
+var allNullMessage = 'All values should be null';
+
+var jsonArrayDateValue = [];
+
+var imageAlt = 'Online Json Editor';
+var propertyBox = 'property-box';
+
+var rootJsonObject = new JsonObject(rootObject,rootObjectTableId,rootObjectImageId);
+
+function JsonElement(name,value,valueType){
+    this.type = "jsonElement";
+    this.name = name;
+    this.value = value;
+    this.valueType = valueType;
+    this.divId = "";
+}
+
+function JsonArray(name,valueType){
+    this.type = "jsonArray";
+    this.name = name;
+    this.value = new Array();
+    this.valueType = valueType
+    this.tableId = "";
+    this.imageId = "";
+    this.parent = "";
+    this.divId = "";
+}
+
+function JsonObject(name,tableId,imageId){
+    this.type = "jsonObject";
+    this.name = name;
+    this.value = new Array();
+    this.tableId = tableId;
+    this.imageId = imageId;
+    this.divId = "";
+}
+
+function isFloat(n){
+    return n % 1 !== 0;
+}
+
+function isInteger(n){
+    return n % 1 === 0;
+}
+
+function setFormattedJsonText(){
+    var json = {};
+    if(rootJsonObject != null){
+        json = getJsonObject(rootJsonObject);
+    }
+    document.getElementById(jsonTextViewId).value = JSON.stringify(json,null,'\t');
+}
+
+function getJsonObject(jsonObject){
+    var property;
+    var object = {};
+    if(jsonObject.value !== null){
+        for(var i=0;i<jsonObject.value.length;i++){
+            property = jsonObject.value[i];
+            if(property !== null){
+                if(property.type === "jsonElement"){
+                    object[property.name] = property.value;
+                }else if(property.type === "jsonArray"){
+                	var temp = new Array();
+                	for(var j in property.value){                		
+                		if(Object.prototype.toString.call(property.value[j]) === '[object Object]'){
+                			temp.push(getJsonObject(property.value[j]));
+                		}else{
+                			temp.push(property.value[j]);
+                		}
+                	}
+                	object[property.name] = temp;                    
+                }else if(property.type === "jsonObject"){
+                    object[property.name] = getJsonObject(property);
+                }
+            }
+        }
+    }
+    return object;
+}
+
+jQuery.data(document.getElementById(rootObjectViewId),attachedJsonObjectKey,rootJsonObject);
+
+function setAndShowPropertyBox(objectView){
+    var JsonObject = jQuery.data(objectView,attachedJsonObjectKey);
+    if(JsonObject.type === objectDragElementType){
+        showPropertyBox(propertyBox,objectDragElementType);
+        jQuery.data(document.getElementById(elementBoxId),dropTargetDivKey,objectView);
+        setElementBoxInitialValues(JsonObject,toolboxElementName,toolboxElementType,toolboxElementValue,
+            toolboxElementRadioTrue,toolboxElementRadioFalse,toolboxElementRadioDiv,toolboxElementMandatoryName,
+            toolboxElementMandatoryValue);
+    }else if(JsonObject.type === objectDragArrayType){
+    	showPropertyBox(propertyBox,objectDragArrayType);
+        jQuery.data(document.getElementById(arrayBoxId),dropTargetDivKey,objectView);
+        setArrayBoxInitialValues(JsonObject,toolboxArrayName,toolboxArrayValue,toolboxArrayDateDiv,
+            toolboxDateDiv,toolboxArrayDateValue,toolboxArrayType,toolboxArrayMandatoryName,toolboxArrayMandatoryValue,
+            toolboxArrayCheckValue,cssClassAddDate,cssClassDeleteImage);        
+    }else if(JsonObject.type === objectDragObjectType){
+    	if(JsonObject.parent === objectDragObjectType){
+    		showPropertyBox(propertyBox,objectDragObjectType);
+            jQuery.data(document.getElementById(objectBoxId),dropTargetDivKey,objectView);
+            setObjectBoxInitialValues(JsonObject,toolboxObjectName,toolboxObjectMandatoryName);
+    	}
+    }
+}
+
+function drop(event) {
+    event.preventDefault();
+    var dropTarget = event.currentTarget;
+    var dragType = event.dataTransfer.getData(objectDragType);
+    var bindObject = jQuery.data(dropTarget,attachedJsonObjectKey);
+    if(bindObject != null){
+        var isAllowed = allowDrop(dragType,bindObject);
+        if(isAllowed){
+            objectViewSelectId_2 = objectViewSelectId;
+            objectViewSelectId = dropTarget.id;
+            if(dragType === objectDragElementType){
+                openOverlay(overlayDivId,objectDragElementType);
+                jQuery.data(document.getElementById(overlayElementBoxId),dropTargetDivKey,dropTarget);
+                setElementBoxInitialValues(new JsonElement("","",autoType),overlayElementName,overlayElementType,overlayElementValue,
+                    overlayElementRadioTrue,overlayElementRadioFalse,overlayElementRadioDiv,overlayElementMandatoryName,
+                    overlayElementMandatoryValue);
+            }else if(dragType === objectDragArrayType){
+            	openOverlay(overlayDivId,objectDragArrayType);
+                jQuery.data(document.getElementById(overlayArrayBoxId),dropTargetDivKey,dropTarget);
+                setArrayBoxInitialValues(new JsonArray("",autoType),overlayArrayName,overlayArrayValue,overlayArrayDateDiv,
+                    overlayDateDiv,overlayArrayDateValue,overlayArrayType,overlayArrayMandatoryName,overlayArrayMandatoryValue,
+                    overlayArrayCheckValue,cssClassAddDateOverlay,cssClassDeleteImageOverlay);                
+            }else if(dragType === objectDragObjectType){
+            	if(dragType === bindObject.type){
+            		openOverlay(overlayDivId,objectDragObjectType);
+                    jQuery.data(document.getElementById(overlayObjectBoxId),dropTargetDivKey,dropTarget);
+                    setObjectBoxInitialValues(new JsonObject("","",""),overlayObjectName,overlayObjectMandatoryName);
+            	}else{
+            		var jsonObject = new JsonObject("","","");
+            		var bindObject = jQuery.data(dropTarget,attachedJsonObjectKey);
+            		jsonObject.name = bindObject.value.length;
+            		jsonObject.parent = objectDragArrayType;
+                    bindObject.value.push(jsonObject);
+                    var data = createObjectDiv(jsonObject);
+                    document.getElementById(bindObject.tableId).appendChild(data.element);
+                    document.getElementById(bindObject.tableId).appendChild(data.table);
+                    document.getElementById(bindObject.imageId).style.visibility = displayVisible;
+                    objectTreeDivOnClick(data.id);
+                    setFormattedJsonText();
+            	}                               
+            }
+        }else{
+            dropTarget.style.background = objectViewDivBackground;
+            if(objectViewSelectId != null){
+                var objectView = document.getElementById(objectViewSelectId);
+                objectView.style.background = objectViewDivSelectBackground;
+            }
+        }
+    }
+}
+
+function allowDrop(dragType,dropObject){
+    var dropType = dropObject.type;
+    if(dragType === objectDragElementType){
+        if(dropType === objectDragObjectType){
+            return true;
+        }else if(dropType === objectDragElementType){
+            alert(ElementInElementMessage);
+            return false;
+        }else if(dropType === objectDragArrayType){
+            alert(ElementInArrayMessage);
+            return false;
+        }
+    }else if(dragType === objectDragObjectType){
+        if(dropType === objectDragObjectType){
+            return true;
+        }else if(dropType === objectDragElementType){
+            alert(ObjectInElementMessage);
+            return false;
+        }else if(dropType === objectDragArrayType){
+            if(dropObject.valueType === objectsType){
+                return true;
+            }else{
+                alert(ArrayInNonObjectsMessage);
+                return false;
+            }
+        }
+    }else if(dragType === objectDragArrayType){
+        if(dropType === objectDragObjectType){
+            return true;
+        }else if(dropType === objectDragElementType){
+            alert(ArrayInElementMessage);
+            return false;
+        }else if(dropType === objectDragArrayType){
+            alert(ArrayInArrayMessage);
+            return false;
+        }
+    }
+}
+
+function getFormattedTreeDivId(name){
+    counter = counter + 1;
+    if(name.length >= 5){
+        return name.substring(0,5) + "-" + counter;
+    }else{
+        return name + "-" + counter;
+    }
+}
+
+function getFormattedTreeDivName(name){
+    if(name.length > 15){
+        return name.substring(0,15) + "...";
+    }else{
+        return name;
+    }
+}
+
+function createElementDiv(jsonObject){
+    var divId = getFormattedTreeDivId(jsonObject.name)+"-div";
+    jsonObject.divId = divId;
+    var element = getMandatoryText(divId,elementTreeViewClassName,
+    		getFormattedTreeDivName(jsonObject.name));
+    jQuery.data(element,attachedJsonObjectKey,jsonObject);    
+    element.addEventListener('dragenter',function(event){
+        dragEnter(event);
+    });
+    element.addEventListener('dragleave',function(event){
+        dragLeave(event);
+    });
+    element.addEventListener('drop',function(event){
+        drop(event);
+    });
+    element.addEventListener('dragover',function(event){
+        dragOver(event);
+    });
+    element.addEventListener('click',function(){
+        objectTreeDivOnClick(divId);
+    });
+    var row = document.createElement("tr");
+    $(row).attr('id',divId+'-tr');
+    var column = document.createElement("td");
+    column.appendChild(getImage(divId+'-img',circleImagePath,circleImagePathClassName));
+    column.appendChild(element);
+    row.appendChild(column);
+    return  {
+        element: row,
+        id: divId
+    };
+}
+
+function createObjectDiv(jsonObject){
+    var divId = getFormattedTreeDivId(jsonObject.name)+"-div";
+    jsonObject.divId = divId;
+    var colImage = getImage(divId+'-img',collapseImagePath,collapseImagePathClassName);
+    colImage.addEventListener('click',function(){
+        objectCollapseImageOnClick(divId+'-table',divId+'-img',divId);
+    });
+    var element = getMandatoryText(divId,'',getFormattedTreeDivName(jsonObject.name));
+    jQuery.data(element,attachedJsonObjectKey,jsonObject);    
+    if(jsonObject.type === objectDragArrayType){
+        $(element).addClass(arrayTreeViewClassName);
+    }else{
+        $(element).addClass(objectTreeViewClassName);
+    }
+    element.addEventListener('dragenter',function(event){
+        dragEnter(event);
+    });
+    element.addEventListener('dragleave',function(event){
+        dragLeave(event);
+    });
+    element.addEventListener('drop',function(event){
+        drop(event);
+    });
+    element.addEventListener('dragover',function(event){
+        dragOver(event);
+    });
+    element.addEventListener('click',function(){
+        objectTreeDivOnClick(divId);
+    });    
+    var table = document.createElement("table");
+    $(table).attr('id',divId+'-table');
+    $(table).addClass(treeTableClassName);
+    jsonObject.tableId = divId+'-table';
+    jsonObject.imageId = divId+'-img';
+    var row = document.createElement("tr");
+    $(row).attr('id',divId+'-tr');    
+    var rowTable = document.createElement("tr");
+    $(rowTable).attr('id',divId+'-table-tr'); 
+    var column = document.createElement("td");
+    column.appendChild(colImage);
+    column.appendChild(element);
+    row.appendChild(column);    
+    var columnTable = document.createElement("td");    
+    columnTable.appendChild(table);
+    rowTable.appendChild(columnTable);
+    return  {
+        element: row,
+        id: divId,
+        table:rowTable
+    };
+}
+
+function objectCollapseImageOnClick(divIdTable,divIdImage,divId){
+    var tableView = document.getElementById(divIdTable);
+    var imageView = document.getElementById(divIdImage);
+    if(imageView.src.includes(collapseImagePath)){
+        tableView.style.display = displayNone;
+        imageView.src = expandImagePath;
+    }else if(imageView.src.includes(expandImagePath)){
+        tableView.style.display = displayBlock;
+        imageView.src = collapseImagePath;
+    }
+    objectTreeDivOnClick(divId);
+}
+
+function deleteJsonView(){
+    if(objectViewSelectId == null){
+        alert(noneSelectedMessage);
+    }else if(objectViewSelectId == rootObjectViewId){
+        alert(rootSelectedMessage);
+    }else{
+        var ok = confirm(deleteConfirmMessage);
+        if(ok){
+        	unCopy();
+            var jsonObject = jQuery.data(document.getElementById(objectViewSelectId),attachedJsonObjectKey);
+            var objectViewTr = document.getElementById(objectViewSelectId+'-tr');
+            var objectViewTableTr = document.getElementById(objectViewSelectId+'-table-tr');
+            var parentTableView = objectViewTr.parentNode;
+            parentTableView.removeChild(objectViewTr);
+            if(objectViewTableTr !== null){
+                parentTableView.removeChild(objectViewTableTr);
+            }
+            var parentDivId = parentTableView.id.replace("-table","");
+            var parentJsonObject = jQuery.data(document.getElementById(parentDivId),attachedJsonObjectKey);
+            if(parentJsonObject != null && parentJsonObject.value != null){
+                var i = parentJsonObject.value.indexOf(jsonObject);
+                if(i != -1) {
+                    parentJsonObject.value.splice(i, 1);
+                }
+            }
+            if(parentJsonObject.value.length == 0){
+                document.getElementById(parentDivId+'-img').style.visibility='hidden';
+            }
+            if(jsonObject.type === objectDragObjectType && jsonObject.parent === objectDragArrayType){
+            	var temp;
+            	var tempElement;
+            	for(var j in parentJsonObject.value){
+            		temp = parentJsonObject.value[j];
+            		temp.name = j;
+            		tempElement = document.getElementById(temp.divId);
+            		$(tempElement).html(getFormattedTreeDivName(temp.name));
+            	}
+            }
+            setFormattedJsonText();
+            objectTreeDivOnClick(parentDivId);
+        }
+    }
+}
+
+function dragObjectStart(event) {
+    dragStart();
+    event.dataTransfer.setData(objectDragType, objectDragObjectType);
+}
+
+function dragElementStart(event) {
+    dragStart();
+    event.dataTransfer.setData(objectDragType, objectDragElementType);
+}
+
+function dragArrayStart(event) {
+    dragStart();
+    event.dataTransfer.setData(objectDragType, objectDragArrayType);
+}
+
+function dragStart(){
+    if(objectViewSelectId != null){
+        var objectView = document.getElementById(objectViewSelectId);
+        objectView.style.background = objectViewDivBackground;
+    }
+}
+
+function dragEnter(event) {
+    var objectViewDiv = event.currentTarget;
+    if(objectViewDiv != null){
+        objectViewDiv.style.background = objectViewDivSelectBackground;
+    }
+}
+
+function dragEnded(event) {
+    if(objectViewSelectId != null){
+        var objectView = document.getElementById(objectViewSelectId);
+        objectView.style.background = objectViewDivSelectBackground;
+    }
+}
+
+function dragLeave(event) {
+    var objectViewDiv = event.currentTarget;
+    if(objectViewDiv != null){
+        objectViewDiv.style.background = objectViewDivBackground;
+    }
+}
+
+function dragOver(event) {
+    event.preventDefault();
+}
+
+function showPropertyBox(propertyBoxId,dragType){
+    var propertyBox = document.getElementById(propertyBoxId);
+    if(dragType === objectDragElementType){
+        propertyBox.appendChild(elementDiv());
+    }else if(dragType === objectDragObjectType){
+        propertyBox.appendChild(objectDiv());
+    }else if(dragType === objectDragArrayType){
+        propertyBox.appendChild(arrayDiv());
+    }
+}
+
+function hidePropertyBox(propertyBoxId){
+    var propertyBox = document.getElementById(propertyBoxId);
+    while (propertyBox.firstChild) {
+        propertyBox.removeChild(propertyBox.firstChild);
+    }
+}
+
+function openOverlay(overlayId,dragType){
+    var Overlay = document.getElementById(overlayId);
+    Overlay.style.visibility = displayVisible;
+    if(dragType === objectDragElementType){
+        Overlay.appendChild(elementDivOverlay());
+    }else if(dragType === objectDragObjectType){
+        Overlay.appendChild(objectDivOverlay());
+    }else if(dragType === objectDragArrayType){
+        Overlay.appendChild(arrayDivOverlay());
+    }
+}
+
+var closeOverLayVar = function closeOverlay(overlayId,crossButton){
+    var Overlay = document.getElementById(overlayId);
+    Overlay.style.visibility = displayHidden;
+    while (Overlay.firstChild) {
+        Overlay.removeChild(Overlay.firstChild);
+    }
+    if(crossButton){
+        if(objectViewSelectId != null){
+            var objectView = document.getElementById(objectViewSelectId);
+            objectView.style.background = objectViewDivBackground;
+        }
+        if(objectViewSelectId_2 != null){
+            var objectView = document.getElementById(objectViewSelectId_2);
+            objectView.style.background = objectViewDivSelectBackground;
+        }
+        objectViewSelectId = objectViewSelectId_2;
+    }
+}
+
+function setJsonElementValue(elementBox,nameId,valueId,radioTrueId,radioFalseId,typeId,nameMandatoryId,valueMandatoryId){
+    var jsonElement = new JsonElement("","","");
+    var isCheckPassed = true;
+    var jsonElementNameDiv = document.getElementById(nameId);
+    if(jsonElementNameDiv.value === undefined || jsonElementNameDiv.value === ''){
+        isCheckPassed = false;
+        document.getElementById(nameMandatoryId).style.display = displayBlock;
+    }else{
+        jsonElement.name = jsonElementNameDiv.value;
+    }
+    var jsonElementSelect = document.getElementById(typeId);
+    var typeValue = jsonElementSelect.options[jsonElementSelect.selectedIndex].value;
+    jsonElement.valueType = typeValue;
+    if(typeValue === booleanType){
+        var jsonElementRadioTrue = document.getElementById(radioTrueId);
+        var jsonElementRadioFalse = document.getElementById(radioFalseId);
+        if(jsonElementRadioTrue.checked === true){
+            jsonElement.value = true;
+        }else if(jsonElementRadioFalse.checked === true){
+            jsonElement.value = false;
+        }else{
+            isCheckPassed = false;
+            document.getElementById(valueMandatoryId).style.display = displayBlock;
+        }
+    }else{
+        var jsonElementValueDiv = document.getElementById(valueId);
+        if(typeValue === stringType || typeValue === autoType){
+            if(jsonElementValueDiv.value === undefined){
+                isCheckPassed = false;
+                document.getElementById(valueMandatoryId).style.display = displayBlock;
+            }
+        }else {
+            if(jsonElementValueDiv.value === undefined || jsonElementValueDiv.value === ''){
+                isCheckPassed = false;
+                document.getElementById(valueMandatoryId).style.display = displayBlock;
+            }
+        }
+    }
+    if(!isCheckPassed){
+        return;
+    }else{
+        if(typeValue === stringType){
+            jsonElement.value = jsonElementValueDiv.value;
+        }else if(typeValue === numberType){
+            jsonElement.value = jsonElementValueDiv.valueAsNumber;
+        }else if(typeValue === dateType){
+            jsonElement.value = jsonElementValueDiv.valueAsDate;
+        }else if(typeValue === nullType){
+            if(jsonElementValueDiv.value.toLowerCase() === 'null'){
+                jsonElement.value = null;
+            }
+        }else if(typeValue === autoType){
+            if(jsonElementValueDiv.value.toLowerCase() === 'null'){
+                jsonElement.value = null;
+            }else if(jsonElementValueDiv.value.toLowerCase() === 'true' ){
+                jsonElement.value = true;
+            }else if(jsonElementValueDiv.value.toLowerCase() === 'false' ){
+                jsonElement.value = false;
+            }else if(jsonElementValueDiv.value.toLowerCase() === '' ){
+                jsonElement.value = '';
+            }else if(!isNaN(jsonElementValueDiv.value)){
+                if(isFloat(jsonElementValueDiv.value)){
+                    jsonElement.value = parseFloat(jsonElementValueDiv.value);
+                }else if(isInteger(jsonElementValueDiv.value)){
+                    jsonElement.value = parseInt(jsonElementValueDiv.value);
+                }else{
+                    jsonElement.value = jsonElementValueDiv.value;
+                }
+            }else{
+                jsonElement.value = jsonElementValueDiv.value;
+            }
+        }
+        
+        if(elementBox === overlayElementBoxId){
+            var dropTarget = jQuery.data(document.getElementById(elementBox),dropTargetDivKey);
+            var bindObject = jQuery.data(dropTarget,attachedJsonObjectKey);
+            bindObject.value.push(jsonElement);
+            var data = createElementDiv(jsonElement);
+            document.getElementById(bindObject.tableId).appendChild(data.element);
+            document.getElementById(bindObject.imageId).style.visibility = displayVisible;
+            closeOverLayVar(overlayDivId,false);
+            objectTreeDivOnClick(data.id);
+        }else if(elementBox === elementBoxId){
+            var selectedObjectViewDiv = jQuery.data(document.getElementById(elementBox),dropTargetDivKey);
+            var bindObject = jQuery.data(selectedObjectViewDiv,attachedJsonObjectKey);
+            bindObject.name = jsonElement.name;
+            bindObject.value = jsonElement.value;
+            bindObject.valueType = jsonElement.valueType;
+            $(selectedObjectViewDiv).html(getFormattedTreeDivName(bindObject.name));
+        }
+        setFormattedJsonText();
+        return;
+    }
+}
+
+function setElementBoxInitialValues(jsonElementObject,elementName,elementType,elementValue,elementRadioTrue,
+                                    elementRadioFalse,elementRadioDiv,elementNameMandatoryDiv,elementValueMandatoryDiv){
+    var value = jsonElementObject.value;
+    var name = jsonElementObject.name;
+    var valueType = jsonElementObject.valueType;
+
+    document.getElementById(elementNameMandatoryDiv).style.display = displayNone;
+    document.getElementById(elementValueMandatoryDiv).style.display = displayNone;
+
+    document.getElementById(elementName).value = name;
+    document.getElementById(elementType).value = valueType;
+    /* first clean input types */
+    var jsonElementInput = document.getElementById(elementValue);
+    var jsonElementRadioTrue = document.getElementById(elementRadioTrue);
+    var jsonElementRadioFalse = document.getElementById(elementRadioFalse);
+    var jsonElementRadioDiv = document.getElementById(elementRadioDiv);
+    jsonElementInput.value = "";
+    jsonElementRadioTrue.checked = "";
+    jsonElementRadioFalse.checked = "";
+
+    if(valueType === stringType || valueType === autoType){
+        jsonElementInput.type = "text";
+        if(value === null){
+            jsonElementInput.value = 'null';
+        }else{
+            jsonElementInput.value = value;
+        }
+        jsonElementInput.readOnly = false;
+        jsonElementRadioDiv.style.display = displayNone;
+    }else if(valueType === numberType){
+        jsonElementInput.type = "number";
+        jsonElementInput.value = value;
+        jsonElementInput.readOnly = false;
+        jsonElementRadioDiv.style.display = displayNone;
+    }if(valueType === booleanType){
+        jsonElementInput.value = "";
+        jsonElementInput.readOnly = false;
+        jsonElementInput.type = "hidden";
+        jsonElementRadioDiv.style.display = displayInline;
+        if(true === value){
+            jsonElementRadioTrue.checked = "checked";
+        }else{
+            jsonElementRadioFalse.checked = "checked";
+        }
+    }if(valueType === nullType){
+        jsonElementInput.type = "text";
+        jsonElementInput.value = "null";
+        jsonElementInput.readOnly = true;
+        jsonElementRadioDiv.style.display = displayNone;
+    }if(valueType === dateType){
+        jsonElementInput.type = "date";
+        jsonElementInput.valueAsDate = value;
+        jsonElementInput.readOnly = false;
+        jsonElementRadioDiv.style.display = displayNone;
+    }
+}
+
+function elementDivOverlay(){
+    var overlayDiv = getDivWithIdAndClass('element-toolbox-overlay','element-toolbox-overlay');
+    var titleBar = createOverlayTitleBar('Json Element',closeOverLayVar,'overlay');
+    var elementDiv = getDivWithIdAndClass('element-box','element-box');
+    elementDiv.appendChild(elementNameOverlay());
+    elementDiv.appendChild(elementValueOverlay());
+    elementDiv.appendChild(elementTypeOverlay());
+    elementDiv.appendChild(elementButtonOverlay());
+
+    overlayDiv.appendChild(titleBar);
+    overlayDiv.appendChild(elementDiv);
+    return overlayDiv;
+}
+
+function elementValueOverlay(){
+    var valueDiv = getPropertyDiv('property-div');
+    var value = getPropertyDivText('property-value','Value :- ');
+    var input = getPropertyDivInput('element-value','text','width:70%');
+    input.addEventListener('blur',function(){
+        checkElementValueOnblur('element-value','element-value-mandatory-overlay','element-type');
+    });
+    input.addEventListener('focus',function(){
+        checkElementOnFocus('element-value-mandatory-overlay');
+    });
+    var radioDiv = getPropertyBooleanBox('element-radio-div','element-radio-true',
+    		'element-radio-false','property-name','element-value-mandatory-overlay');
+    var valueMandatory = getMandatoryText('element-value-mandatory-overlay','mandatory-text-overlay',
+    		'* Value is a Mandatory Field');
+    valueDiv.appendChild(value);
+    valueDiv.appendChild(input);
+    valueDiv.appendChild(radioDiv);
+    valueDiv.appendChild(document.createElement('br'));
+    valueDiv.appendChild(valueMandatory);
+    return valueDiv;
+}
+
+function elementDiv(){
+    var elementDiv = document.createElement('div');
+    $(elementDiv).attr('id','json-element-box');
+    elementDiv.appendChild(elementName());
+    elementDiv.appendChild(elementValue());
+    elementDiv.appendChild(elementType());
+    elementDiv.appendChild(elementButton());
+    return elementDiv;
+}
+
+function elementValue(){
+    var valueDiv = getPropertyDiv('json-property-div');
+    var value = getPropertyDivText('json-property-value','Value :- ');
+    var input = getPropertyDivInput('json-element-value','text','width:60%');
+    input.addEventListener('blur',function(){
+        checkElementValueOnblur('json-element-value','element-value-mandatory-text','json-element-type')
+    });
+    input.addEventListener('focus',function(){
+        checkElementOnFocus('element-value-mandatory-text')
+    });
+    var radioDiv = getPropertyBooleanBox('json-element-radio-div','json-element-radio-true',
+    		'json-element-radio-false','json-property-name','element-value-mandatory-text');    
+    var valueMandatory = getMandatoryText('element-value-mandatory-text','mandatory-text',
+    		'* Value is a Mandatory Field');
+    valueDiv.appendChild(value);
+    valueDiv.appendChild(input);
+    valueDiv.appendChild(radioDiv);
+    valueDiv.appendChild(valueMandatory);
+    return valueDiv;
+}
+
+function elementButtonOverlay(){
+    var setDiv = getPropertyDiv('property-div');
+    var button = getPropertyDivButton('element-set','button','button-set','Set');
+    button.addEventListener('click',function(){
+        setJsonElementValue('element-toolbox-overlay','element-name','element-value',
+            'element-radio-true','element-radio-false','element-type',
+            'element-name-mandatory-overlay','element-value-mandatory-overlay');
+    });
+    setDiv.appendChild(button);
+    return setDiv;
+}
+
+function elementButton(){
+    var setDiv = getPropertyDiv('json-property-div');
+    var button = getPropertyDivButton('json-element-set','button','json-button-set','Set');
+    button.addEventListener('click',function(){
+        setJsonElementValue('json-element-box','json-element-name','json-element-value',
+            'json-element-radio-true','json-element-radio-false','json-element-type',
+            'element-name-mandatory-text','element-value-mandatory-text')
+    });
+    setDiv.appendChild(button);
+    return setDiv;
+}
+
+function elementTypeOverlay(){
+    var typeDiv = getPropertyDiv('property-div');
+    var type = getPropertyDivText('property-type','Type :- ');
+    var select = getPropertyDivSelect('element-type');
+    select.addEventListener('change',function(){
+        changeJsonElementValueTypeBox('element-value','element-type',
+            'element-radio-true','element-radio-false','element-radio-div');
+    });
+    typeDiv.appendChild(type);
+    typeDiv.appendChild(select);
+    return typeDiv;
+}
+
+function elementType(){
+    var typeDiv = getPropertyDiv('json-property-div');
+    var type = getPropertyDivText('json-property-type','Type :- ');
+    var select = getPropertyDivSelect('json-element-type');
+    select.addEventListener('change',function(){
+        changeJsonElementValueTypeBox('json-element-value','json-element-type',
+            'json-element-radio-true','json-element-radio-false','json-element-radio-div');
+    });
+    typeDiv.appendChild(type);
+    typeDiv.appendChild(select);
+    return typeDiv;
+}
+
+function elementNameOverlay(){
+    var nameDiv = getPropertyDiv('property-div');
+    var name = getPropertyDivText('property-name','Name :- ');
+    var input = getPropertyDivInput('element-name','text','width:70%');
+    input.addEventListener('blur',function(){
+        checkElementOnblur('element-name','element-name-mandatory-overlay')
+    });
+    input.addEventListener('focus',function(){
+        checkElementOnFocus('element-name-mandatory-overlay')
+    });
+    var nameMandatory = getMandatoryText('element-name-mandatory-overlay','mandatory-text-overlay','* Name is a Mandatory Field');
+    nameDiv.appendChild(name);
+    nameDiv.appendChild(input);
+    nameDiv.appendChild(document.createElement('br'));
+    nameDiv.appendChild(nameMandatory);
+    return nameDiv;
+}
+
+function elementName(){
+    var nameDiv = getPropertyDiv('json-property-div');
+    var name = getPropertyDivText('json-property-name','Name :- ');
+    var input = getPropertyDivInput('json-element-name','text','width:60%');
+    input.addEventListener('blur',function(){
+        checkElementOnblur('json-element-name','element-name-mandatory-text');
+    });
+    input.addEventListener('focus',function(){
+        checkElementOnFocus('element-name-mandatory-text');
+    });
+    var nameMandatory = getMandatoryText('element-name-mandatory-text','mandatory-text','* Name is a Mandatory Field');
+    nameDiv.appendChild(name);
+    nameDiv.appendChild(input);
+    nameDiv.appendChild(nameMandatory);
+    return nameDiv;
+}
+
+function checkElementOnblur(elementName,mandatoryDiv){
+    var jsonElementInput = document.getElementById(elementName);
+    var value = jsonElementInput.value;
+    if(value === undefined || value === ''){
+        document.getElementById(mandatoryDiv).style.display = displayBlock;
+    }
+}
+
+function checkElementOnFocus(mandatoryDiv){
+    document.getElementById(mandatoryDiv).style.display = displayNone;
+}
+
+function checkElementValueOnblur(elementName,mandatoryDiv,elementType){
+    var jsonElementSelect = document.getElementById(elementType);
+    var typeValue = jsonElementSelect.options[jsonElementSelect.selectedIndex].value;
+    var value = document.getElementById(elementName).value;
+    if(typeValue === stringType || typeValue === autoType){
+        if(value === undefined){
+            document.getElementById(mandatoryDiv).style.display = displayBlock;
+        }
+    }else {
+        if(value === undefined || value === ''){
+            document.getElementById(mandatoryDiv).style.display = displayBlock;
+        }
+    }
+}
+
+function setElementBooleanValue(mandatoryDiv){
+    document.getElementById(mandatoryDiv).style.display = displayNone;
+}
+
+function changeJsonElementValueTypeBox(valueTypeId,selectTypeId,radioTypeTrue,radioTypeFalse,radioDiv){
+    var jsonElementInput = document.getElementById(valueTypeId);
+    var jsonElementRadioTrue = document.getElementById(radioTypeTrue);
+    var jsonElementRadioFalse = document.getElementById(radioTypeFalse);
+    var jsonElementRadioDiv = document.getElementById(radioDiv);
+    var jsonElementSelect = document.getElementById(selectTypeId);
+    var value = jsonElementSelect.options[jsonElementSelect.selectedIndex].value;
+    if(value === stringType || value === autoType){
+        jsonElementInput.type = "text";
+        jsonElementInput.value = "";
+        jsonElementInput.readOnly = false;
+        jsonElementRadioDiv.style.display = displayNone;
+        jsonElementInput.focus();
+    }else if(value === numberType){
+        jsonElementInput.type = "number";
+        jsonElementInput.value = "";
+        jsonElementInput.readOnly = false;
+        jsonElementRadioDiv.style.display = displayNone;
+        jsonElementInput.focus();
+    }if(value === booleanType){
+        jsonElementInput.value = "";
+        jsonElementInput.readOnly = false;
+        jsonElementInput.type = "hidden";
+        jsonElementRadioDiv.style.display = displayInline;
+        jsonElementRadioTrue.checked = "";
+        jsonElementRadioFalse.checked = "";
+        jsonElementRadioTrue.focus();
+    }if(value === nullType){
+        jsonElementInput.type = "text";
+        jsonElementInput.value = "null";
+        jsonElementInput.readOnly = true;
+        jsonElementRadioDiv.style.display = displayNone;
+        jsonElementInput.focus();
+    }if(value === dateType){
+        jsonElementInput.type = "date";
+        jsonElementInput.value = "";
+        jsonElementInput.readOnly = false;
+        jsonElementRadioDiv.style.display = displayNone;
+        jsonElementInput.focus();
+    }
+}
+
+function setArrayBoxInitialValues(jsonArrayObject, arrayName, arrayValue,
+		arrayDateDiv, dateDiv, arrayDateValue, arrayType, arrayMandatoryName,
+		arrayMandatoryValue, arrayCheckValue, spanClassName, imageClassName) {
+	var value = jsonArrayObject.value;
+	var name = jsonArrayObject.name;
+	var valueType = jsonArrayObject.valueType;
+
+	document.getElementById(arrayMandatoryName).style.display = displayNone;
+	document.getElementById(arrayMandatoryValue).style.display = displayNone;
+	document.getElementById(arrayCheckValue).style.display = displayNone;
+
+	document.getElementById(arrayName).value = name;
+	document.getElementById(arrayType).value = valueType;
+
+	/* first clean input types */
+	var jsonArrayValue = document.getElementById(arrayValue);
+	var jsonArrayDateDiv = document.getElementById(arrayDateDiv);
+	var jsonArrayDateValueInput = document.getElementById(arrayDateValue);
+	var jsonDateDiv = document.getElementById(dateDiv);
+
+	jsonArrayDateValueInput.value = "";
+	jsonDateDiv.innerHTML = "";
+	jsonArrayDateValue = [];
+	jsonArrayDateDiv.style.display = displayNone;
+
+	jsonArrayValue.value = value;
+	jsonArrayValue.readOnly = false;
+	jsonArrayValue.disabled = false;
+
+	if (valueType == dateType) {
+		jsonArrayValue.value = "";
+		jsonArrayValue.readOnly = true;
+		var newdateDiv;
+		for (var i = 0; i < value.length; i++) {
+			jsonArrayDateValue.push(value[i]);
+			newdateDiv = addDateDiv(arrayValue, value[i],
+					jsonArrayDateValue.length - 1, dateDiv, spanClassName,
+					imageClassName);
+			jsonDateDiv.appendChild(newdateDiv);
+		}
+		setDateValueToInput(arrayValue, jsonArrayDateValue);
+		jsonArrayDateDiv.style.display = displayBlock;
+	} else if (valueType == nullType) {
+		var temp = '';
+		for (var i = 0; i < value.length; i++) {
+			temp = temp + "," + valueNull;
+		}
+		if (temp.charAt(0) === ',')
+			temp = temp.substring(1);
+		jsonArrayValue.value = temp;
+	} else if (valueType == autoType) {
+		var temp = '';
+		for (var i = 0; i < value.length; i++) {
+			if (value[i] === null) {
+				temp = temp + "," + valueNull;
+			} else {
+				temp = temp + "," + value[i];
+			}
+		}
+		if (temp.charAt(0) === ',')
+			temp = temp.substring(1);
+		jsonArrayValue.value = temp;
+	} else if (valueType == objectsType) {
+		jsonArrayValue.value = '';
+		jsonArrayValue.disabled = true;
+	}
+}
+
+function setJsonArrayValue(arrayBox, nameId, valueId, typeId, nameMandatoryId,
+		valueMandatoryId, checkDateId) {
+	document.getElementById(checkDateId).style.display = displayNone;
+	var jsonArray = new JsonArray("", "");
+	var isCheckPassed = true;
+	var isValueCorrect = false;
+
+	var jsonArrayNameDiv = document.getElementById(nameId);
+	if (jsonArrayNameDiv.value === undefined || jsonArrayNameDiv.value === '') {
+		isCheckPassed = false;
+		document.getElementById(nameMandatoryId).style.display = displayBlock;
+	} else {
+		jsonArray.name = jsonArrayNameDiv.value;
+	}
+	var jsonArraySelect = document.getElementById(typeId);
+	var typeValue = jsonArraySelect.options[jsonArraySelect.selectedIndex].value;
+	jsonArray.valueType = typeValue;
+	var jsonArrayValueDiv = document.getElementById(valueId);
+	if (typeValue === stringType || typeValue === autoType
+			|| typeValue === objectsType) {
+		if (jsonArrayValueDiv.value === undefined) {
+			isCheckPassed = false;
+			document.getElementById(valueMandatoryId).style.display = displayBlock;
+		}
+	} else {
+		if (jsonArrayValueDiv.value === undefined
+				|| jsonArrayValueDiv.value === '') {
+			isCheckPassed = false;
+			document.getElementById(valueMandatoryId).style.display = displayBlock;
+		}
+	}
+	if (isCheckPassed) {
+		var isValueCorrect = checkArrayValue(valueId, typeId, valueMandatoryId,
+				checkDateId);
+		if (isValueCorrect) {
+			var values = jsonArrayValueDiv.value.split(',');
+			for (var i = 0; i < values.length; i++) {
+				if (values[i] != null) {
+					switch (typeValue) {
+					case numberType:
+						if (!isNaN(values[i])) {
+							if (isFloat(values[i])) {
+								jsonArray.value.push(parseFloat(values[i]));
+							} else {
+								jsonArray.value.push(parseInt(values[i]));
+							}
+						}
+						break;
+					case booleanType:
+						if (values[i].toLowerCase() === 'true') {
+							jsonArray.value.push(true);
+						} else if (values[i].toLowerCase() === 'false') {
+							jsonArray.value.push(false);
+						}
+						break;
+					case nullType:
+						if (values[i].toLowerCase() === 'null') {
+							jsonArray.value.push(null);
+						}
+						break;
+					case dateType:
+						for ( var i in jsonArrayDateValue) {
+							if (jsonArrayDateValue[i] !== null) {
+								jsonArray.value.push(jsonArrayDateValue[i]);
+							}
+						}
+						break;
+					case autoType:
+						if (values[i].toLowerCase() === 'null') {
+							jsonArray.value.push(null);
+						} else if (values[i].toLowerCase() === 'true') {
+							jsonArray.value.push(true);
+						} else if (values[i].toLowerCase() === 'false') {
+							jsonArray.value.push(false);
+						} else if (values[i].toLowerCase() === '') {
+							jsonArray.value.push('');
+						} else if (!isNaN(values[i])) {
+							if (isFloat(values[i])) {
+								jsonArray.value.push(parseFloat(values[i]));
+							} else if (isInteger(values[i])) {
+								jsonArray.value.push(parseInt(values[i]));
+							} else {
+								jsonArray.value.push(values[i]);
+							}
+						} else {
+							jsonArray.value.push(values[i]);
+						}
+						break;
+					case objectsType:
+						break;
+					default:
+						jsonArray.value.push(values[i]);
+					}
+				}
+			}
+		}
+	}
+	if (!isCheckPassed || !isValueCorrect) {
+		return;
+	} else {
+		if (arrayBox === overlayArrayBoxId) {
+			var dropTarget = jQuery.data(document.getElementById(arrayBox),
+					dropTargetDivKey);
+			var bindObject = jQuery.data(dropTarget, attachedJsonObjectKey);
+			bindObject.value.push(jsonArray);
+			var data = createObjectDiv(jsonArray);
+			document.getElementById(bindObject.tableId).appendChild(data.element);
+			document.getElementById(bindObject.tableId).appendChild(data.table);
+			document.getElementById(bindObject.imageId).style.visibility = displayVisible;
+			closeOverLayVar(overlayDivId, overlayArrayBoxId, false);
+			objectTreeDivOnClick(data.id);
+		} else if (arrayBox === arrayBoxId) {
+			var selectedObjectViewDiv = jQuery.data(document
+					.getElementById(arrayBox), dropTargetDivKey);
+			var bindObject = jQuery.data(selectedObjectViewDiv,
+					attachedJsonObjectKey);
+			if (bindObject.valueType === objectsType) {
+				if (bindObject.tableId !== undefined
+						&& bindObject.tableId !== '') {
+					var tableElement = document
+							.getElementById(bindObject.tableId);
+					while (tableElement.firstChild) {
+						tableElement.removeChild(tableElement.firstChild);
+					}
+					if (bindObject.imageId !== undefined
+							&& bindObject.imageId !== '') {
+						document.getElementById(bindObject.imageId).style.visibility = displayHidden;
+					}
+				}
+			}
+			bindObject.name = jsonArray.name;
+			bindObject.value = jsonArray.value;
+			bindObject.valueType = jsonArray.valueType;
+			$(selectedObjectViewDiv).html(
+					getFormattedTreeDivName(bindObject.name));
+		}
+		setFormattedJsonText();
+		return;
+	}
+}
+
+function addDate(dateInputId, valueMandatoryId, valueDivId, mandatoryId,
+		dateDivId, spanClassName, imageClassName) {
+	document.getElementById(mandatoryId).style.display = displayNone;
+	var jsonArrayDateDiv = document.getElementById(dateInputId);
+	var mandatory = document.getElementById(valueMandatoryId);
+	if (jsonArrayDateDiv.value === undefined || jsonArrayDateDiv.value === '') {
+		mandatory.innerHTML = selectDateMessage;
+		mandatory.style.display = displayBlock;
+	} else {
+		mandatory.innerHTML = "";
+		mandatory.style.display = displayNone;
+		jsonArrayDateValue.push(jsonArrayDateDiv.valueAsDate);
+		setDateValueToInput(valueDivId, jsonArrayDateValue);
+		var dateDiv = document.getElementById(dateDivId);
+		var newdateDiv = addDateDiv(valueDivId, jsonArrayDateDiv.valueAsDate,
+				jsonArrayDateValue.length - 1, dateDivId, spanClassName,
+				imageClassName);
+		dateDiv.appendChild(newdateDiv);
+		jsonArrayDateDiv.value = '';
+	}
+}
+
+function setDateValueToInput(valueDivId, jsonArrayDateValue) {
+	var jsonElementValueDiv = document.getElementById(valueDivId);
+	jsonElementValueDiv.value = "";
+	var temp = "";
+	for (var i = 0; i < jsonArrayDateValue.length; i++) {
+		if (jsonArrayDateValue[i] != null) {
+			temp = temp + "," + jsonArrayDateValue[i].toLocaleDateString();
+		}
+	}
+	if (temp.charAt(0) === ',')
+		temp = temp.substring(1);
+	jsonElementValueDiv.value = temp;
+}
+
+function addDateDiv(valueDivId, value, num, dateDivId, spanClassName,
+		imageClassName) {
+	var id = "date-" + num;
+	var div = document.createElement("div");
+	div.id = id;
+	var span = document.createElement("span");
+	span.className = spanClassName;
+	span.innerHTML = value.toLocaleDateString();
+	var img = document.createElement("img");
+	img.src = deleteImagePath;
+	img.className = imageClassName;
+	img.addEventListener('click', function() {
+		deleteDate(valueDivId, id, num, dateDivId);
+	});
+	div.appendChild(span);
+	div.appendChild(img);
+	return div
+}
+
+function deleteDate(valueDivId, id, num, dateDivId) {
+	var dateDiv = document.getElementById(dateDivId);
+	var dateToDelete = document.getElementById(id);
+	dateDiv.removeChild(dateToDelete);
+	jsonArrayDateValue[num] = null;
+	setDateValueToInput(valueDivId, jsonArrayDateValue);
+}
+
+function closeArrayOverlay(overlayId, elementToolDiv, crossButton) {
+	document.getElementById(overlayId).style.visibility = displayHidden;
+	document.getElementById(elementToolDiv).style.display = displayNone;
+	/* set display of mandatory text as none */
+	document.getElementById(overlayArrayMandatoryName).style.display = displayNone;
+	document.getElementById(overlayArrayMandatoryValue).style.display = displayNone;
+	document.getElementById(overlayArrayCheckValue).style.display = displayNone;
+	if (crossButton) {
+		if (objectViewSelectId != null) {
+			var objectView = document.getElementById(objectViewSelectId);
+			objectView.style.background = objectViewDivBackground;
+		}
+		if (objectViewSelectId_2 != null) {
+			var objectView = document.getElementById(objectViewSelectId_2);
+			objectView.style.background = objectViewDivSelectBackground;
+		}
+		objectViewSelectId = objectViewSelectId_2;
+	}
+}
+
+function checkArrayValueOnFocus(mandatoryDiv, typeId) {
+	var jsonElementSelect = document.getElementById(typeId);
+	var typeValue = jsonElementSelect.options[jsonElementSelect.selectedIndex].value;
+	if (typeValue !== dateType) {
+		document.getElementById(mandatoryDiv).style.display = displayNone;
+	}
+}
+
+function checkArrayValue(valueTypeId, selectTypeId, mandatoryDiv, checkDiv) {
+	var isValuePresent = true;
+	var jsonArrayType = document.getElementById(selectTypeId);
+	var typeValue = jsonArrayType.options[jsonArrayType.selectedIndex].value;
+	var value = document.getElementById(valueTypeId).value;
+	if (typeValue === stringType || typeValue === autoType
+			|| typeValue === objectsType) {
+		if (value === undefined) {
+			document.getElementById(mandatoryDiv).style.display = displayBlock;
+			document.getElementById(checkDiv).style.display = displayNone;
+			isValuePresent = false;
+		}
+	} else {
+		if (value === undefined || value === '') {
+			document.getElementById(mandatoryDiv).style.display = displayBlock;
+			document.getElementById(checkDiv).style.display = displayNone;
+			isValuePresent = false;
+		}
+	}
+	if (isValuePresent) {
+		value = value.trim();
+		var values = value.split(",");
+		var isValueNotProper = false;
+		var val;
+		var message = "";
+		if (typeValue === numberType) {
+			for (var i = 0; i < values.length; i++) {
+				val = values[i].trim();
+				if (isNaN(val)) {
+					isValueNotProper = true;
+					message = allNumberMessage;
+					break;
+				}
+			}
+		} else if (typeValue === booleanType) {
+			for (var i = 0; i < values.length; i++) {
+				val = values[i].trim();
+				if (val.toLowerCase() != 'true' && val.toLowerCase() != 'false') {
+					isValueNotProper = true;
+					message = allBooleanMessage;
+					break;
+				}
+			}
+		} else if (typeValue === nullType) {
+			for (var i = 0; i < values.length; i++) {
+				val = values[i].trim();
+				if (val.toLowerCase() != 'null') {
+					isValueNotProper = true;
+					message = allNullMessage;
+					break;
+				}
+			}
+		}
+		if (isValueNotProper && values.length > 0) {
+			var check = document.getElementById(checkDiv);
+			check.innerHTML = message;
+			check.style.display = displayBlock;
+			return false;
+		} else {
+			document.getElementById(checkDiv).style.display = displayNone;
+			return true;
+		}
+	} else {
+		return false;
+	}
+
+}
+
+function changeJsonArrayValueType(valueTypeId, selectTypeId, arrayDateDivId,
+		checkDiv, valueMandatoryId, dateTypeId, dateDiv) {
+	var jsonArrayInput = document.getElementById(valueTypeId);
+	var jsonArrayType = document.getElementById(selectTypeId);
+	var jsonArrayDateDiv = document.getElementById(arrayDateDivId);
+	var value = jsonArrayType.options[jsonArrayType.selectedIndex].value;
+	var jsonArrayCheckDiv = document.getElementById(checkDiv);
+	jsonArrayCheckDiv.style.display = displayNone;
+	jsonArrayInput.readOnly = false;
+	jsonArrayInput.disabled = false;
+	if (value == dateType) {
+		jsonArrayInput.value = "";
+		jsonArrayInput.readOnly = true;
+		jsonArrayDateDiv.style.display = displayBlock;
+		checkElementOnFocus(valueMandatoryId);
+	} else if (value == objectsType) {
+		jsonArrayInput.value = "";
+		jsonArrayInput.disabled = true;
+		jsonArrayDateDiv.style.display = displayNone;
+		document.getElementById(dateTypeId).value = "";
+		document.getElementById(dateDiv).innerHTML = "";
+		jsonArrayDateValue = [];
+		checkElementOnFocus(valueMandatoryId);
+	} else {
+		jsonArrayInput.value = "";
+		jsonArrayDateDiv.style.display = displayNone;
+		document.getElementById(dateTypeId).value = "";
+		document.getElementById(dateDiv).innerHTML = "";
+		jsonArrayDateValue = [];
+		jsonArrayInput.focus();
+	}
+}
+
+function arrayDivOverlay() {
+	var overlayDiv = getDivWithIdAndClass('array-toolbox-overlay',
+			'array-toolbox-overlay');
+	var titleBar = createOverlayTitleBar('Json Array', closeOverLayVar,
+			'overlay');
+	var arrayDiv = getDivWithIdAndClass('array-box', 'array-box');
+	arrayDiv.appendChild(arrayNameOverlay());
+	arrayDiv.appendChild(arrayValueOverlay());
+	arrayDiv.appendChild(arrayTypeOverlay());
+	arrayDiv.appendChild(arrayButtonOverlay());
+
+	overlayDiv.appendChild(titleBar);
+	overlayDiv.appendChild(arrayDiv);
+	return overlayDiv;
+}
+
+function arrayDiv() {
+	var arrayDiv = getDivWithIdAndClass('json-array-box', 'json-array-box');
+	arrayDiv.appendChild(arrayName());
+	arrayDiv.appendChild(arrayValue());
+	arrayDiv.appendChild(arrayType());
+	arrayDiv.appendChild(arrayButton());
+	return arrayDiv;
+}
+
+function arrayNameOverlay() {
+	var nameDiv = getPropertyDiv('property-div');
+	var name = getPropertyDivText('property-name', 'Name :- ');
+	var input = getPropertyDivInput('array-name', 'text', 'width:70%');
+	input.addEventListener('blur', function() {
+		checkElementOnblur('array-name', 'array-name-mandatory-overlay');
+	});
+	input.addEventListener('focus', function() {
+		checkElementOnFocus('array-name-mandatory-overlay');
+	});
+	var nameMandatory = getMandatoryText('array-name-mandatory-overlay',
+			'mandatory-text-overlay', '* Name is a Mandatory Field');
+	nameDiv.appendChild(name);
+	nameDiv.appendChild(input);
+	nameDiv.appendChild(document.createElement('br'));
+	nameDiv.appendChild(nameMandatory);
+	return nameDiv;
+}
+
+function arrayName() {
+	var nameDiv = getPropertyDiv('json-property-div');
+	var name = getPropertyDivText('json-property-name', 'Name :- ');
+	var input = getPropertyDivInput('json-array-name', 'text', 'width:60%');
+	input.addEventListener('blur', function() {
+		checkElementOnblur('json-array-name', 'array-name-mandatory-text');
+	});
+	input.addEventListener('focus', function() {
+		checkElementOnFocus('array-name-mandatory-text');
+	});
+	var nameMandatory = getMandatoryText('array-name-mandatory-text',
+			'mandatory-text', '* Name is a Mandatory Field');
+	nameDiv.appendChild(name);
+	nameDiv.appendChild(input);
+	nameDiv.appendChild(nameMandatory);
+	return nameDiv;
+}
+
+function arrayValueOverlay() {
+	var outerValueDiv = getPropertyDiv('property-div');
+
+	var valueDiv = getPropertyDiv('array-div-value');
+	var value = getPropertyDivText('property-value', 'Value :- ');
+	var input = getPropertyDivInput('array-value', 'text', 'width:70%');
+	input.addEventListener('blur', function() {
+		checkArrayValue('array-value', 'array-type',
+				'array-value-mandatory-overlay', 'array-value-check-overlay');
+	});
+	input.addEventListener('focus', function() {
+		checkArrayValueOnFocus('array-value-mandatory-overlay', 'array-type');
+	});
+	var tooltip = document.createElement('div');
+	$(tooltip).addClass('tool-tip-text');
+	$(tooltip).html('Enter Comma Separated Values without quotes');
+	valueDiv.appendChild(value);
+	valueDiv.appendChild(input);
+	valueDiv.appendChild(tooltip);
+	outerValueDiv.appendChild(valueDiv);
+
+	outerValueDiv.appendChild(getDateDiv('array-date-div', 'date-div',
+			'width:70%', 'array-date-value', 'array-date-value-add',
+			'array-date-value', 'array-value-check-overlay',
+			'array-value-mandatory-overlay', 'array-value', 'add-date',
+			'delete-image'));
+	outerValueDiv.appendChild(getMandatoryText('array-value-check-overlay',
+			'mandatory-text-overlay', ''));
+	outerValueDiv.appendChild(getMandatoryText('array-value-mandatory-overlay',
+			'mandatory-text-overlay', '* Value is a Mandatory Field'));
+	return outerValueDiv;
+}
+
+function arrayValue() {
+	var outerValueDiv = getPropertyDiv('json-property-div');
+
+	var valueDiv = getPropertyDiv('json-array-div-value');
+	var value = getPropertyDivText('json-property-value', 'Value :- ');
+	var input = getPropertyDivInput('json-array-value', 'text', 'width:60%');
+	input.addEventListener('blur', function() {
+		checkArrayValue('json-array-value', 'json-array-type',
+				'array-value-mandatory-text', 'array-value-check-text');
+	});
+	input.addEventListener('focus',
+			function() {
+				checkArrayValueOnFocus('array-value-mandatory-text',
+						'json-array-type');
+			});
+	var tooltip = document.createElement('div');
+	$(tooltip).addClass('tool-tip-text');
+	$(tooltip).html('Enter Comma Separated Values without quotes');
+	valueDiv.appendChild(value);
+	valueDiv.appendChild(input);
+	valueDiv.appendChild(tooltip);
+	outerValueDiv.appendChild(valueDiv);
+
+	outerValueDiv.appendChild(getDateDiv('json-array-date-div',
+			'json-date-div', 'width:60%', 'json-array-date-value',
+			'json-array-date-value-add', 'json-array-date-value',
+			'array-value-check-text', 'array-value-mandatory-text',
+			'json-array-value', 'json-add-date', 'json-delete-image'));
+	outerValueDiv.appendChild(getMandatoryText('array-value-mandatory-text',
+			'mandatory-text', '* Value is a Mandatory Field'));
+	outerValueDiv.appendChild(getMandatoryText('array-value-check-text',
+			'mandatory-text', ''));
+	return outerValueDiv;
+}
+
+function arrayTypeOverlay() {
+	var typeDiv = getPropertyDiv('property-div');
+	var type = getPropertyDivText('property-type', 'Type :- ');
+	var select = getPropertyDivSelect('array-type');
+	$(select).append(
+			$("<option></option>").attr('value', 'objects').text('Objects'));
+	select.addEventListener('change', function() {
+		changeJsonArrayValueType('array-value', 'array-type', 'array-date-div',
+				'array-value-check-overlay', 'array-value-mandatory-overlay',
+				'array-date-value', 'date-div');
+	});
+	typeDiv.appendChild(type);
+	typeDiv.appendChild(select);
+	return typeDiv;
+}
+
+function arrayType() {
+	var typeDiv = getPropertyDiv('json-property-div');
+	var type = getPropertyDivText('json-property-type', 'Type :- ');
+	var select = getPropertyDivSelect('json-array-type');
+	$(select).append(
+			$("<option></option>").attr('value', 'objects').text('Objects'));
+	select.addEventListener('change', function() {
+		changeJsonArrayValueType('json-array-value', 'json-array-type',
+				'json-array-date-div', 'array-value-check-text',
+				'array-value-mandatory-text', 'json-array-date-value',
+				'json-date-div');
+	});
+	typeDiv.appendChild(type);
+	typeDiv.appendChild(select);
+	return typeDiv;
+}
+
+function arrayButtonOverlay() {
+	var setDiv = getPropertyDiv('property-div');
+	var button = getPropertyDivButton('array-set', 'button', 'button-set',
+			'Set');
+	button.addEventListener('click', function() {
+		setJsonArrayValue('array-toolbox-overlay', 'array-name', 'array-value',
+				'array-type', 'array-name-mandatory-overlay',
+				'array-value-mandatory-overlay', 'array-value-check-overlay');
+	});
+	setDiv.appendChild(button);
+	return setDiv;
+}
+
+function arrayButton() {
+	var setDiv = getPropertyDiv('json-property-div');
+	var button = getPropertyDivButton('json-array-set', 'button',
+			'json-button-set', 'Set');
+	button.addEventListener('click', function() {
+		setJsonArrayValue('json-array-box', 'json-array-name',
+				'json-array-value', 'json-array-type',
+				'array-name-mandatory-text', 'array-value-mandatory-text',
+				'array-value-check-text');
+	});
+	setDiv.appendChild(button);
+	return setDiv;
+}
+
+function setJsonObjectValue(objectBox,nameId,nameMandatoryId){
+    var jsonObject = new JsonObject("","","");
+    var isCheckPassed = true;
+    var jsonObjectNameDiv = document.getElementById(nameId);
+    if(jsonObjectNameDiv.value === undefined || jsonObjectNameDiv.value === ''){
+        isCheckPassed = false;
+        document.getElementById(nameMandatoryId).style.display = displayBlock;
+    }else{
+        jsonObject.name = jsonObjectNameDiv.value;
+    }
+    if(!isCheckPassed){
+        return;
+    }else{
+        if(objectBox === overlayObjectBoxId){
+            var dropTarget = jQuery.data(document.getElementById(objectBox),dropTargetDivKey);
+            var bindObject = jQuery.data(dropTarget,attachedJsonObjectKey);
+            jsonObject.parent = objectDragObjectType;
+            bindObject.value.push(jsonObject);
+            var data = createObjectDiv(jsonObject);
+            document.getElementById(bindObject.tableId).appendChild(data.element);
+            document.getElementById(bindObject.tableId).appendChild(data.table);
+            document.getElementById(bindObject.imageId).style.visibility = displayVisible;
+            closeOverLayVar(overlayDivId,false);
+            objectTreeDivOnClick(data.id);
+        }else if(objectBox === objectBoxId){
+            var selectedObjectViewDiv = jQuery.data(document.getElementById(objectBox),dropTargetDivKey);
+            var bindObject = jQuery.data(selectedObjectViewDiv,attachedJsonObjectKey);
+            bindObject.name = jsonObject.name;
+            $(selectedObjectViewDiv).html(getFormattedTreeDivName(bindObject.name));
+        }
+        setFormattedJsonText();
+        return;
+    }
+}
+
+function setObjectBoxInitialValues(jsonObject,objectName,objectMandatoryName){
+    var name = jsonObject.name;
+    document.getElementById(objectMandatoryName).style.display = displayNone;
+    document.getElementById(objectName).value = name;
+}
+
+function objectDivOverlay(){
+    var outerObjectDiv = getDivWithIdAndClass('object-toolbox-overlay','object-toolbox-overlay');
+    var titleBar = createOverlayTitleBar('Json Object',closeOverLayVar,'overlay');
+    var objectDiv = getDivWithIdAndClass('object-box','element-box');
+    objectDiv.appendChild(objectNameOverlay());
+    objectDiv.appendChild(objectButtonOverlay());
+    outerObjectDiv.appendChild(titleBar);
+    outerObjectDiv.appendChild(objectDiv);
+    return outerObjectDiv;
+}
+
+function objectDiv(){
+    var objectDiv = getDivWithId('json-object-box');
+    objectDiv.appendChild(objectName());
+    objectDiv.appendChild(objectButton());
+    return objectDiv;
+}
+
+function objectNameOverlay(){
+    var nameDiv = getPropertyDiv('property-div');
+    var name = getPropertyDivText('property-name','Name :- ');
+    var input = getPropertyDivInput('object-name','text','width:70%');
+    input.addEventListener('blur',function(){
+        checkElementOnblur('object-name','object-name-mandatory-overlay');
+    });
+    input.addEventListener('focus',function(){
+        checkElementOnFocus('object-name-mandatory-overlay');
+    });
+    var nameMandatory = getMandatoryText('object-name-mandatory-overlay','mandatory-text-overlay','* Name is a Mandatory Field');
+    nameDiv.appendChild(name);
+    nameDiv.appendChild(input);
+    nameDiv.appendChild(nameMandatory);
+    return nameDiv;
+}
+
+function objectName(){
+    var nameDiv = getPropertyDiv('json-property-div');
+    var name = getPropertyDivText('json-property-name','Name :- ');
+    var input = getPropertyDivInput('json-object-name','text','width:60%');
+    input.addEventListener('blur',function(){
+        checkElementOnblur('json-object-name','object-name-mandatory-text');
+    });
+    input.addEventListener('focus',function(){
+        checkElementOnFocus('object-name-mandatory-text');
+    });
+    var nameMandatory = getMandatoryText('object-name-mandatory-text','mandatory-text','* Name is a Mandatory Field');
+    nameDiv.appendChild(name);
+    nameDiv.appendChild(input);
+    nameDiv.appendChild(nameMandatory);
+    return nameDiv;
+}
+
+function objectButtonOverlay(){
+    var setDiv = getPropertyDiv('property-div');
+    var button = getPropertyDivButton('object-set','button','button-set','Set');
+    button.addEventListener('click',function(){
+        setJsonObjectValue('object-toolbox-overlay','object-name','object-name-mandatory-overlay');
+    });
+    setDiv.appendChild(button);
+    return setDiv;
+}
+
+function objectButton(){
+    var setDiv = getPropertyDiv('json-property-div');
+    var button = getPropertyDivButton('json-object-set','button','json-button-set','Set');
+    button.addEventListener('click',function(){
+        setJsonObjectValue('json-object-box','json-object-name','object-name-mandatory-text');
+    });
+    setDiv.appendChild(button);
+    return setDiv;
+}
+
+function loadStartingJson(){
+	var jsObject = {};
+	jsObject[stringType] = 'Hello';
+	jsObject[numberType] = 1;
+	jsObject[booleanType] = false;	
+	var date = new Date();
+	jsObject[dateType] = date;
+	jsObject['array'] = ['a','b','c','d'];
+	jsObject['object'] = {};
+	jsObject.object['objectString'] = 'Hello';
+	jsObject.object['objectNumber'] = 1;
+	jsObject.object['objectBoolean'] = false;
+	
+	document.getElementById(jsonTextViewId).value = JSON.stringify(jsObject,null,'\t');
+	jsObject = JSON.parse(document.getElementById(jsonTextViewId).value);
+	var rootTable = document.getElementById(rootObjectTableId);
+    while(rootTable.firstChild){
+        rootTable.removeChild(rootTable.firstChild);
+    }
+    parseToJsObject(jsObject,rootJsonObject);
+    objectTreeDivOnClick(rootObjectViewId);
+}
+
+function parseToJsObject(jsObject,jsonObject){
+    if(jsObject !== null){
+        for(var prop in jsObject){
+            if(typeof jsObject[prop] === 'string'){     
+            	if(isDate(jsObject[prop])){
+            		var date = Date.parse(jsObject[prop]);
+            		parseJsonElement(jsonObject,prop,new Date(date),'date');            		
+            	}else{            		
+            		parseJsonElement(jsonObject,prop,jsObject[prop],'string');
+            	}                
+            }else if(typeof jsObject[prop] === 'number'){
+                parseJsonElement(jsonObject,prop,jsObject[prop],'number');
+            }else if(typeof jsObject[prop] === 'boolean'){
+                parseJsonElement(jsonObject,prop,jsObject[prop],'boolean');
+            }else if(typeof jsObject[prop] === 'object'){
+                if(jsObject[prop] === null){
+                    parseJsonElement(jsonObject,prop,jsObject[prop],'null');
+                }else if(Object.prototype.toString.call(jsObject[prop]) === '[object Array]'){
+                    parseJsonArray(jsonObject,prop,jsObject[prop]);
+                }else if(Object.prototype.toString.call(jsObject[prop]) === '[object Object]'){
+                    parseJsonObject(jsonObject,prop,jsObject[prop],objectDragObjectType);
+                }
+            }
+        }
+    }
+}
+
+function parseJsonObject(parentObj,name,jsObject,parentType){
+    var jsonObj = new JsonObject(name,'','');
+    jsonObj.parent = parentType;
+    parentObj.value.push(jsonObj);
+    var data = createObjectDiv(jsonObj);
+    document.getElementById(parentObj.tableId).appendChild(data.element);
+    document.getElementById(parentObj.tableId).appendChild(data.table);
+    document.getElementById(parentObj.imageId).style.visibility = displayVisible;
+    parseToJsObject(jsObject,jsonObj);
+}
+
+function parseJsonArray(parentObj,name,values){
+    var jsonArrayObj = new JsonArray(name,'');
+    jsonArrayObj.valueType = 'auto';
+    parentObj.value.push(jsonArrayObj);
+    var data = createObjectDiv(jsonArrayObj);
+    document.getElementById(parentObj.tableId).appendChild(data.element);
+    document.getElementById(parentObj.tableId).appendChild(data.table);
+    document.getElementById(parentObj.imageId).style.visibility = displayVisible;
+    if(values !== null){
+    	var temp = new Array();
+        for(var val in values){
+            if(typeof values[val] === 'object'){
+                if(Object.prototype.toString.call(values[val]) === '[object Object]'){
+                    parseJsonObject(jsonArrayObj,val,values[val],objectDragArrayType);
+                    jsonArrayObj.valueType = 'objects';
+                }else if(val === null){
+                	temp.push(values[val]);
+                }
+            }else{
+            	temp.push(values[val]);
+            }            
+        }
+    }
+    if(jsonArrayObj.valueType !== objectsType){
+    	jsonArrayObj.value = temp;  
+    }
+}
+
+function parseJsonElement(parentObj,name,value,valueType){
+    var jsonElement = new JsonElement(name,value,valueType);
+    parentObj.value.push(jsonElement);
+    var data = createElementDiv(jsonElement);
+    document.getElementById(parentObj.tableId).appendChild(data.element);
+    document.getElementById(parentObj.imageId).style.visibility = displayVisible;
+}
+
+function expandJsonObjectView(objectViewTableId,largeObjectViewId,overlayId){
+    var overlay = document.getElementById(overlayId);
+    overlay.appendChild(createLargeObjectViewOverlay());
+    overlay.style.visibility = displayVisible;
+    var tableView = document.getElementById(objectViewTableId);
+    var largeView = document.getElementById(largeObjectViewId);
+    largeView.appendChild(tableView);
+}
+
+function expandJsonTextView(textAreaId,largeTextAreaId,overlayId){
+    var overlay = document.getElementById(overlayId);
+    overlay.appendChild(createLargeTextViewOverlay());
+    overlay.style.visibility = displayVisible;
+    document.getElementById(largeTextAreaId).value = document.getElementById(textAreaId).value;
+}
+
+var closeLargeTextOverlayVar = function closeLargeTextOverlay(overlayId){
+    closeLargeOverlay(overlayId);
+}
+
+var closeLargeObjectOverlayVar = function closeLargeObjectOverlay(overlayId){
+    var tableView = document.getElementById('json-object-view-table');
+    var view = document.getElementById('json-object-view');
+    view.appendChild(tableView);
+    closeLargeOverlay(overlayId);
+}
+
+function closeLargeOverlay(overlayId){
+    var overlay = document.getElementById(overlayId);
+    while(overlay.firstChild){
+        overlay.removeChild(overlay.firstChild);
+    }
+    overlay.style.visibility = displayHidden;
+}
+
+function createLargeTextViewOverlay(){
+    var jsonTextView = getDivWithIdAndClass('large-json-text-view','large-json-text-view');
+    var textArea = document.createElement('textarea');
+    $(textArea).addClass('large-json-text');
+    $(textArea).attr('id','large-json-text');
+    $(textArea).attr('readonly','readonly');
+    jsonTextView.appendChild(createLargeOverlayTitleBar('Json Text View',closeLargeTextOverlayVar,'large-json-overlay'));
+    jsonTextView.appendChild(textArea);
+    return jsonTextView;
+}
+
+function createLargeObjectViewOverlay(){
+    var jsonObjectView = getDivWithIdAndClass('large-json-object-view','large-json-text-view');
+    var objectView = getDivWithIdAndClass('large-json-object','large-json-object');
+    jsonObjectView.appendChild(createLargeOverlayTitleBar('Json Object View',closeLargeObjectOverlayVar,'large-json-overlay'));
+    jsonObjectView.appendChild(objectView);
+    return jsonObjectView;
+}
+
+function createOverlayTitleBar(spanText,closeEvent,overlayId){
+    var titleBar = document.createElement('div');
+    $(titleBar).addClass('overlay-title-bar');
+    var title = document.createElement('span');
+    $(title).addClass('overlay-title');
+    $(title).html(spanText);
+    var closeImage = document.createElement('img');
+    $(closeImage).addClass('close-overlay');
+    $(closeImage).attr('alt',imageAlt);
+    $(closeImage).attr('src',deleteImagePath);
+    closeImage.addEventListener('click',function(){
+        closeEvent(overlayId,true);
+    });
+    titleBar.appendChild(title);
+    titleBar.appendChild(closeImage);
+    return titleBar;
+}
+
+function createLargeOverlayTitleBar(spanText,closeEvent,overlayId){
+    var titleBar = document.createElement('div');
+    $(titleBar).addClass('overlay-title-bar');
+    var title = document.createElement('span');
+    $(title).addClass('overlay-title');
+    $(title).html(spanText);
+    var closeImage = document.createElement('img');
+    $(closeImage).addClass('close-overlay');
+    $(closeImage).attr('alt',imageAlt);
+    $(closeImage).attr('src',deleteImagePath);
+    closeImage.addEventListener('click',function(){
+        closeEvent(overlayId);
+    });
+    titleBar.appendChild(title);
+    titleBar.appendChild(closeImage);
+    return titleBar;
+}
+
+function getDivWithId(id){
+    var div = document.createElement('div');
+    $(div).attr('id',id);
+    return div;
+}
+
+function getDivWithIdAndClass(id,className){
+    var div = document.createElement('div');
+    $(div).attr('id',id);
+    $(div).addClass(className);
+    return div;
+}
+
+function getMandatoryText(divId,className,text){
+    var mandatory = document.createElement('div');
+    $(mandatory).attr('id',divId);
+    $(mandatory).addClass(className);
+    $(mandatory).html(text);
+    return mandatory;
+}
+
+function getPropertyDivText(spanClassName,spanText){
+    var text = document.createElement('span');
+    $(text).addClass(spanClassName);
+    $(text).html(spanText);
+    return text;
+}
+
+function getPropertyDiv(divClassName){
+    var div = document.createElement('div');
+    $(div).addClass(divClassName);
+    return div;
+}
+
+function getPropertyDivInput(id,type,style){
+    var input = document.createElement('input');
+    $(input).attr('id',id);
+    $(input).attr('type',type);
+    $(input).attr('style',style);
+    return input;
+}
+
+function getPropertyDivButton(id,type,className,text){
+    var button = document.createElement('button');
+    $(button).attr('id',id);
+    $(button).attr('type',type);
+    $(button).addClass(className);
+    $(button).html(text);
+    return button;
+}
+
+function getImage(id,imagePath,className){
+	var image = document.createElement("img");
+    $(image).addClass(className);
+    $(image).attr('id',id);
+    $(image).attr('src',imagePath);
+    return image;  
+}
+
+function getDateDiv(arrayDateDivId,dateDivId,dateDivStyle,inputId,dateValueAddId,arrayDateValue,arrayValueCheck,
+		arrayValueMandatory,arrayValue,addDateId,deleteImage) {
+	var arrayDateDiv = getDivWithId(arrayDateDivId);
+	$(arrayDateDiv).attr('style', 'display:none');
+	var dateDiv = getDivWithId(dateDivId);	
+	var input = getPropertyDivInput(inputId,'date',dateDivStyle);
+	$(input).addClass('json-array-date');	
+	var button = document.createElement('button');
+	$(button).attr('id', dateValueAddId);
+	$(button).attr('type', 'button');
+	$(button).attr('style', 'height: 24px');
+	$(button).html('Add');
+	button.addEventListener('click', function() {
+		addDate(arrayDateValue, arrayValueCheck,arrayValue, arrayValueMandatory,dateDivId, addDateId, deleteImage);
+	});
+	arrayDateDiv.appendChild(dateDiv);
+	arrayDateDiv.appendChild(input);
+	arrayDateDiv.appendChild(button);
+	return arrayDateDiv;
+}
+
+function getPropertyDivSelect(id){
+    var select = document.createElement('select');
+    $(select).attr('id',id);
+    $(select).append($("<option></option>").attr('value','auto').text('Auto'));
+    $(select).append($("<option></option>").attr('value','string').text('String'));
+    $(select).append($("<option></option>").attr('value','number').text('Number'));
+    $(select).append($("<option></option>").attr('value','boolean').text('Boolean'));
+    $(select).append($("<option></option>").attr('value','date').text('Date'));
+    $(select).append($("<option></option>").attr('value','null').text('Null'));
+    return select;
+}
+
+function getPropertyDivRadio(id,value){
+    var radioInput = document.createElement('input');
+    $(radioInput).attr('id',id);
+    $(radioInput).attr('type','radio');
+    $(radioInput).attr('name','radioValue');
+    $(radioInput).attr('value',value);
+    return radioInput;
+}
+
+function getPropertyBooleanBox(radioDivId,radioTrueId,radioFalseId,spanClassName,mandatoryValueId){
+	var radioDiv = document.createElement('div');
+    $(radioDiv).attr('id',radioDivId);
+    $(radioDiv).attr('style','display:none');
+    var radioTrueInput = getPropertyDivRadio(radioTrueId,'true');
+    radioTrueInput.addEventListener('click',function(){
+        setElementBooleanValue(mandatoryValueId);
+    });
+    radioTrueInput.addEventListener('focus',function(){
+        checkElementOnFocus(mandatoryValueId);
+    });
+    var trueValue = getPropertyDivText(spanClassName,'True');
+    var radioFalseInput = getPropertyDivRadio(radioFalseId,'false');
+    radioFalseInput.addEventListener('click',function(){
+        setElementBooleanValue(mandatoryValueId);
+    });
+    var falseValue = getPropertyDivText(spanClassName,'False');
+    radioDiv.appendChild(radioTrueInput);
+    radioDiv.appendChild(trueValue);
+    radioDiv.appendChild(radioFalseInput);
+    radioDiv.appendChild(falseValue);
+    return radioDiv;
+}
+
+function newJson(){
+	var rootTable = document.getElementById(rootObjectTableId);
+    while(rootTable.firstChild){
+        rootTable.removeChild(rootTable.firstChild);
+    }
+    document.getElementById(rootObjectViewId).style.background = objectViewDivBackground;
+    objectViewSelectId = null;
+    unCopy();
+    rootJsonObject.value = new Array();
+    setFormattedJsonText();
+}
+
+function copy(){	
+	if(objectViewSelectId === null){
+		alert(noneSelectedCopyMessage);
+	}else{
+		document.getElementById('copy-json-element').src = copySelectImagePath;
+		isCopyMode = true;
+		copyObjectViewId = objectViewSelectId;
+	}
+}
+
+function unCopy(){
+	document.getElementById('copy-json-element').src = copyImagePath;
+	isCopyMode = false;
+	copyObjectViewId = null;
+}
+
+function objectTreeDivOnClick(divId){
+    if(objectViewSelectId != null){
+        var objectView = document.getElementById(objectViewSelectId);
+        if(objectView != null){
+            objectView.style.background = objectViewDivBackground;
+        }
+    }
+    var objectView = document.getElementById(divId);
+    objectView.style.background = objectViewDivSelectBackground;
+    objectViewSelectId = divId;
+    
+    if(isCopyMode){
+    	var name = paste();
+    	unCopy();
+		if(name === objectViewSelectId){
+			hidePropertyBox(propertyBox);
+	        if(divId !== rootObjectViewId){
+	            setAndShowPropertyBox(objectView);
+	        }
+		}else{
+			objectTreeDivOnClick(name);
+		}		
+    }else{
+    	hidePropertyBox(propertyBox);
+        if(divId !== rootObjectViewId){
+            setAndShowPropertyBox(objectView);
+        }
+    }    
+}
+
+function paste(){
+	var returnData = objectViewSelectId;
+	var copyElement = document.getElementById(copyObjectViewId);
+	var copyObject = jQuery.data(copyElement,attachedJsonObjectKey);
+	var pasteElement = document.getElementById(objectViewSelectId);
+	var pasteObject = jQuery.data(pasteElement,attachedJsonObjectKey);
+	var isAllowed = allowDrop(copyObject.type,pasteObject);
+    if(isAllowed){
+    	var isPresent = false;
+    	var counter = 0;
+    	var name = '';
+    	while(true){    		
+    		for(var i in pasteObject.value){
+        		if(pasteObject.value[i].name === (copyObject.name + name)){
+        			isPresent = true;
+        			break;
+        		}
+        	}
+    		if(isPresent){
+    			counter = counter + 1;
+    			name = ' - '+counter;
+    			isPresent = false;
+    		}else{
+    			break;
+    		}
+    	}
+    	var newObject = cloneObject(pasteObject,copyObject,name);        	
+    	if(newObject !== null){
+    		if(pasteObject.type === objectDragArrayType){
+    			newObject.name = pasteObject.value.length;        			
+    			var id = newObject.divId;       			
+    			$(document.getElementById(id)).html(getFormattedTreeDivName(newObject.name));        			
+    			pasteObject.value.push(newObject);
+    		}else{
+    			pasteObject.value.push(newObject);
+    		}
+    		setFormattedJsonText();
+    		returnData = newObject.divId;
+    	}
+    }
+    return returnData;
+}
+
+function cloneObject(parectObject,jsonObject,nameSuffix){
+	var newObject = null;
+	if(jsonObject.type === objectDragElementType){
+		newObject = new JsonElement(jsonObject.name + nameSuffix,'',jsonObject.valueType);
+		var data = createElementDiv(newObject);
+        document.getElementById(parectObject.tableId).appendChild(data.element);
+        document.getElementById(parectObject.imageId).style.visibility = displayVisible;
+		if(jsonObject.valueType === dateType){
+			newObject.value = new Date(jsonObject.value.toUTCString());
+		}else {
+			newObject.value = jsonObject.value;
+		}				
+	}else if(jsonObject.type === objectDragArrayType){
+		newObject = new JsonArray(jsonObject.name + nameSuffix, jsonObject.valueType);
+		var data = createObjectDiv(newObject);
+        document.getElementById(parectObject.tableId).appendChild(data.element);
+        document.getElementById(parectObject.tableId).appendChild(data.table);
+        document.getElementById(parectObject.imageId).style.visibility = displayVisible;
+		if(jsonObject.valueType === dateType){
+			for(var i in jsonObject.value){
+				newObject.value.push(new Date(jsonObject.value[i].toUTCString()));
+			}
+		}else if(jsonObject.valueType === objectsType){
+			for(var i in jsonObject.value){
+				newObject.value.push(cloneObject(newObject,jsonObject.value[i],''));
+			}
+		}else {
+			for(var i in jsonObject.value){
+				newObject.value.push(jsonObject.value[i]);
+			}
+		}		
+	}else if(jsonObject.type === objectDragObjectType){
+		newObject = new JsonObject(jsonObject.name + nameSuffix);
+		newObject.parent = parectObject.type;
+		var data = createObjectDiv(newObject);
+        document.getElementById(parectObject.tableId).appendChild(data.element);
+        document.getElementById(parectObject.tableId).appendChild(data.table);
+        document.getElementById(parectObject.imageId).style.visibility = displayVisible;
+		for(var i in jsonObject.value){
+			newObject.value.push(cloneObject(newObject,jsonObject.value[i],''));
+		}
+	}
+	return newObject;
+}
+
+function saveToDisk() {
+	var element = document.createElement('a');
+	element.setAttribute('href', 'data:application/json;charset=utf-8,'
+			+ encodeURIComponent(document.getElementById(jsonTextViewId).value));
+	element.setAttribute('download', 'JsonFile.json');
+	element.style.display = 'none';
+	document.body.appendChild(element);
+	element.click();
+	document.body.removeChild(element);
+}
+
+function saveToCloud(){		
+	alert(CloudConnectionProblemMessage);
+}
+
+function getParameterByName(name, url) {
+    if (!url) {
+      url = window.location.href;
+    }
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+function load(){
+	loadStartingJson();
+}
+
+function loadJson(){
+    var jsonText = document.getElementById(jsonTextViewId).value;
+    loadJsonToTool(jsonText);
+}
+
+function loadJsonToTool(jsonText){
+	var jsObject = JSON.parse(jsonText);
+	if(jsObject !== null){
+	    var rootTable = document.getElementById(rootObjectTableId);
+	    while(rootTable.firstChild){
+	        rootTable.removeChild(rootTable.firstChild);
+	    }	    
+	    objectViewSelectId = null;
+	    unCopy();
+	    rootJsonObject.value = new Array();
+	    parseToJsObject(jsObject,rootJsonObject);
+	    objectTreeDivOnClick(rootObjectViewId);
+	    setFormattedJsonText();
+	}
+}
+
+function closeHelpOverlay(overlayId,outerDivId){
+    document.getElementById(overlayId).style.visibility = displayHidden;
+    document.getElementById(outerDivId).style.visibility = displayHidden;
+}
+
+function openHelpOverlay(overlayId,outerDivId){
+    document.getElementById(overlayId).style.visibility = displayVisible;
+    document.getElementById(outerDivId).style.visibility = displayVisible;
+}
+
+function isDate(value){	
+	if(moment(value,'YYYY-MM-DD',true).isValid() ||
+			moment(value,'YYYY-MM-DDThh:mm:ss',true).isValid() ||
+			moment(value,'YYYY-MM-DDThh:mm:ssZ',true).isValid() ||
+			moment(value,'YYYY-MM-DDThh:mm',true).isValid() ||
+			moment(value,'YYYY-MM-DDThh:mmZ',true).isValid() ||			
+			moment(value,'YYYY-MM-DDThh:mm:ss.s',true).isValid() ||
+			moment(value,'YYYY-MM-DDThh:mm:ss.sZ',true).isValid() ||
+			moment(value,'YYYY-MM-DDThh:mm:ss.ss',true).isValid() ||
+			moment(value,'YYYY-MM-DDThh:mm:ss.ssZ',true).isValid() ||
+			moment(value,'YYYY-MM-DDThh:mm:ss.sss',true).isValid() ||
+			moment(value,'YYYY-MM-DDThh:mm:ss.sssZ',true).isValid() ||
+			moment(value,'YYYY-MM-DDThh:mm:ss.sss+hh:mm',true).isValid() ||
+			moment(value,'YYYY-MM-DDThh:mm:ss.sss-hh:mm',true).isValid() ||
+			moment(value,'YYYY-MM-DDThh:mm:ss.ss+hh:mm',true).isValid() ||
+			moment(value,'YYYY-MM-DDThh:mm:ss.ss-hh:mm',true).isValid() ||
+			moment(value,'YYYY-MM-DDThh:mm:ss.s+hh:mm',true).isValid() ||
+			moment(value,'YYYY-MM-DDThh:mm:ss.s-hh:mm',true).isValid()){
+		return true;
+	}
+	return false;
+}
